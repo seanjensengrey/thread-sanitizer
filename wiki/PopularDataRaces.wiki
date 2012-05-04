@@ -321,7 +321,6 @@ void Thread2() {
 }
 }}}
 
-ThreadSanitizer will detect such race if the call to `free()` actually happens last.
 [http://code.google.com/p/address-sanitizer/ AddressSanitizer] can also detect such bugs.
 
 =Race during exit=
@@ -350,5 +349,3 @@ int main() {
 }
 
 }}}
-
-
