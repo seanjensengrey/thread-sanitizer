@@ -1,7 +1,7 @@
 #summary ThreadSanitizer Algorithm
 
 =Summary=
-Here we provide a high-level description of ThreadSanitizer algorithm.
+Here we provide a high-level description of ThreadSanitizer (version 2) algorithm.
 The tool is work-in-progress, so some details may change in future.
 This is the second version of ThreadSanitizer,
 the first version can be found [http://code.google.com/p/data-race-test here].
