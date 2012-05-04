@@ -1,0 +1,4 @@
+#summary ThreadSanitizer, a data race detector.
+
+This is a new home for ThreadSanitizer.
+The site is under construction, for now refer to the old home: http://code.google.com/p/data-race-test/
