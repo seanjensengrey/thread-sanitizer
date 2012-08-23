@@ -2,10 +2,10 @@
 
 Flags are passed via TSAN_OPTIONS environment variable.
 
-* force_seq_cst_atomics
+  * force_seq_cst_atomics
 This flag turns all atomic operations into sequentially consistent operations. This is useful to check whether a race is caused by incorrect memory ordering or not.
 <code>
 $ TSAN_OPTIONS="force_seq_cst_atomics=1" ./my_program
 </code>
 
-* If you consistently see only one stack trace in reports, you may try increasing "history size". That can be done only during compilation, pass -DTSAN_HISTORY_SIZE=X to the compiler. Default value for X is 128, you may try increasing it to e.g. 256, 512, 1024, etc.
+  * If you consistently see only one stack trace in reports, you may try increasing "history size". That can be done only during compilation, pass -DTSAN_HISTORY_SIZE=X to the compiler. Default value for X is 128, you may try increasing it to e.g. 256, 512, 1024, etc.
