@@ -307,6 +307,47 @@ This data race is benign if you don't subclass the class which does synchronizat
 ThreadSanitizer can distinguish between benign and harmful races on vptr. <br/>
 Also, consider [http://www.google.com/search?q=sealed+C%2B%2B sealing] your class to avoid problems in the future.
 
+= Data race on vptr during construction =
+
+This is another variation of the vptr race. Consider the following code:
+
+{{{
+class Base {
+  Base() {
+   global_mutex.Lock();
+   global_list.push_back(this);
+   global_mutex.Unlock();
+   // point (A), see below
+  }
+  virtual void Execute() = 0;
+  ...
+};
+
+class Derived : Base {
+  Derived() {
+    name_ = ...;
+  }
+  virtual void Execute() {
+    // use name_;
+  }
+  string name_;
+  ...
+};
+
+Mutex global_mutex;
+vector<Base*> global_list;
+
+// Executed by a background thread.
+void ForEach() {
+  global_mutex.Lock();
+  for (size_t i = 0; i < global_list.size(); i++)
+    global_list[i]->Execute()
+  global_mutex.Unlock();
+}
+}}}
+
+At first glance it looks that global_list is properly synchronized with global_mutex. But the object that is added into global_list is partially constructed, yet becomes available to other threads. E.g. if the thread is preempted in point (A), then ForEach() will trigger pure virtual function call.
+
 =Race on free=
 Sometimes one thread of a program may access a heap memory while another thread is deallocating the same memory. 
 
