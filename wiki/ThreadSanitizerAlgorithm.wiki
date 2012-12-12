@@ -4,7 +4,7 @@
 Here we provide a high-level description of ThreadSanitizer (version 2) algorithm.
 The tool is work-in-progress, so some details may change in future.
 This is the second version of ThreadSanitizer,
-the first version can be found [http://code.google.com/p/data-race-test here].
+the first (slow and deprecated) version can be found [http://code.google.com/p/data-race-test here].
 
 ThreadSanitizer consists of two parts:
 instrumentation module and a run-time library.
