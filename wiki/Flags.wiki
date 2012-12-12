@@ -1,4 +1,4 @@
-#summary Runtime flags.
+#summary Runtime flags
 
 Runtime flags are passed via TSAN_OPTIONS environment variable, separate flags are separated with spaces, e.g.:
 {{{
