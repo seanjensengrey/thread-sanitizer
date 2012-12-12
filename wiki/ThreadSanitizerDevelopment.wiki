@@ -51,7 +51,39 @@ make DEBUG=1 CFLAGS=-DTSAN_DEBUG_OUTPUT=2
 make CFLAGS=-DTSAN_COLLECT_STATS=1
 }}}
 
-To run a an arbitrary program with ThreadSanitizer:
+To run an arbitrary program with ThreadSanitizer:
 {{{
 your/fresh/clang test.c -fsanitize=thread -g -O1 -fPIE -pie
+}}}
+
+=GCC Development=
+
+Note that the runtime library is developed in LLVM repository, it is only imported into GCC.
+
+To download the latest sources:
+{{{
+svn co svn://gcc.gnu.org/svn/gcc/trunk gcc
+}}}
+
+To build:
+{{{
+cd gcc && mkdir build && cd build
+../configure --prefix=/path/to/gcc/install
+make -j10 && make install -j10
+}}}
+
+If you add '--enable-languages=c,c++ --disable-bootstrap --enable-checking=no' to the configure, the process will be way faster.  Sometimes it's also necessary to add '--with-gnu-as --with-gnu-ld'.  If it can't find some libraries run:
+{{{
+sudo apt-get install flex bison libc6-dev libc6-dev-i386 libgmp3-dev libmpfr-dev libmpc-dev
+}}}
+
+To run tests:
+{{{
+cd build
+make check-gcc
+}}}
+
+To run an arbitrary program with ThreadSanitizer:
+{{{
+your/fresh/gcc test.c -fsanitize=thread -g -O1 -fPIE -pie
 }}}
