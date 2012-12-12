@@ -52,7 +52,7 @@ make DEBUG=1 CFLAGS=-DTSAN_DEBUG_OUTPUT=2
 make CFLAGS=-DTSAN_COLLECT_STATS=1
 }}}
 
-To run an arbitrary program with ThreadSanitizer:
+To run an arbitrary program with `ThreadSanitizer`:
 {{{
 your/fresh/clang test.c -fsanitize=thread -g -O1 -fPIE -pie
 }}}
@@ -84,7 +84,7 @@ cd build
 make check-gcc
 }}}
 
-To run an arbitrary program with ThreadSanitizer:
+To run an arbitrary program with `ThreadSanitizer`:
 {{{
 your/fresh/gcc test.c -fsanitize=thread -g -O1 -fPIE -pie
 }}}
