@@ -44,7 +44,8 @@ make DEBUG=1
 # Debug build of the runtime library with debug output:
 make DEBUG=1 CFLAGS=-DTSAN_DEBUG_OUTPUT=1
 
-# Debug build of the runtime library with extended debug output (including memory accesses and function entry/exit events, be careful it can be enormous):
+# Debug build of the runtime library with extended debug output
+# (including memory accesses and function entry/exit events, be careful it can be enormous):
 make DEBUG=1 CFLAGS=-DTSAN_DEBUG_OUTPUT=2
 
 # Runtime with stats collection (prints internal stats at exit):
