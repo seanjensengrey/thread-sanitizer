@@ -1,85 +1,57 @@
-#summary Brand new ThreadSanitizer v2
+#summary ThreadSanitizer Development
 
-ThreadSanitizer v2 is a complete redesign that aims to be considerably faster than the original implementation.
-It's in alpha stage, currently works only on Linux/amd64 with llvm compiler instrumentation.
-[http://code.google.com/p/data-race-test/ The old ThreadSanitizer home is here.]
+=LLVM Development=
 
-See also: ThreadSanitizerAlgorithm.
-
-
-=Developing v2=
-
-All the code resides in the LLVM svn. 
-
+To download the latest sources:
 {{{
 # cd somewhere
-# Get llvm, clang and compiler-rt, build it all
 svn co http://llvm.org/svn/llvm-project/llvm/trunk llvm
 cd llvm
 R=$(svn info | grep Revision: | awk '{print $2}')
 (cd tools && svn co -r $R http://llvm.org/svn/llvm-project/cfe/trunk clang)
 (cd projects && svn co -r $R http://llvm.org/svn/llvm-project/compiler-rt/trunk compiler-rt)
-
-mkdir build
-(cd build && ../configure --enable-optimized && make -j 10)
 }}}
 
-Build ThreadSanitizer tests (not yet integrated with the LLVM build system):
+To build (requires cmake>=2.8.8):
 {{{
-cd projects/compiler-rt/lib/tsan/
-make -f Makefile.old install_deps:
-make -f Makefile.old run -j 
+# in llvm dir
+mkdir build && cd build
+CC=gcc CXX=g++ cmake -DCMAKE_BUILD_TYPE=Release -DLLVM_ENABLE_ASSERTIONS=ON /path/to/llvm/checkout
+make -j10
 }}}
 
-
-==Old, but not completely obsolete instructions==
-
-Install gcc 4.6.3. Don't forget to modify your PATH. Also,
-you may need to run:
+To run tests:
 {{{
-sudo apt-get install flex bison libc6-dev libc6-dev-i386 libgmp3-dev libmpfr-dev libmpc-dev
+cd build
+make check-all -j10 # build and run all tests
+make check-tsan -j10 # build and run ThreadSanitizer tests
 }}}
 
-To build the library and tests:
+Before commit you need to run the presubmit tests (requires gcc>=4.6):
 {{{
-make
-}}}
-To run unit tests:
-{{{
-rtl_tests/tsan_test
-}}}
-To run output tests:
-{{{
-output_tests/test_output.sh
-}}}
-To run presubmit checks (lint, debug and release build, unit- and output tests):
-{{{
+cd projects/compiler-rt/lib/tsan
 make presubmit
+../sanitizer_common/scripts/check_lint.sh
 }}}
-To build release version of the library:
+
+Additional build types:
 {{{
-make DEBUG=0
-}}}
-To build with debug output:
-{{{
-make CFLAGS=-DTSAN_DEBUG_OUTPUT=1
-}}}
-To build with extended debug output (including memory accesses and function entry/exit events, be careful it can be enormous):
-{{{
-make CFLAGS=-DTSAN_DEBUG_OUTPUT=2
-}}}
-To build with stat collection (prints internal stats at exit):
-{{{
+cd projects/compiler-rt/lib/tsan
+
+# Debug build of the runtime library:
+make DEBUG=1
+
+# Debug build of the runtime library with debug output:
+make DEBUG=1 CFLAGS=-DTSAN_DEBUG_OUTPUT=1
+
+# Debug build of the runtime library with extended debug output (including memory accesses and function entry/exit events, be careful it can be enormous):
+make DEBUG=1 CFLAGS=-DTSAN_DEBUG_OUTPUT=2
+
+# Runtime with stats collection (prints internal stats at exit):
 make CFLAGS=-DTSAN_COLLECT_STATS=1
 }}}
-To build something real with v2:
+
+To run a an arbitrary program with ThreadSanitizer:
 {{{
-clang test.c -fthread-sanitizer -fPIE -O1 -g -pie -lpthread -ldl -Lpath/to/libtsan -ltsan
+your/fresh/clang test.c -fsanitize=thread -g -O1 -fPIE -pie
 }}}
-
-
-=New detected types of bugs=
-  * Use after free races: [http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/free_race.c output_tests/free_race.c]
-  * Races on mutexes: [http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/race_on_mutex.c output_tests/race_on_mutex.c]
-  * Races on pthread_barrier_t: [http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/race_on_barrier.c output_tests/race_on_barrier.c] [http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/race_on_barrier2.c output_tests/race_on_barrier2.c]
-  * Leaked threads: [http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/thread_leak3.c output_tests/thread_leak3.c]
