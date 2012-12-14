@@ -1,13 +1,18 @@
 #summary Types of bugs ThreadSanitizer can detect
 
-= Introduction =
 
-Add your content here.
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+=Detectable bug types= 
+ * Use after free races:   
+[http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/free_race.c   
+output_tests/free_race.c] 
+ * Races on mutexes:   
+[http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/race_on_mutex.c   
+output_tests/race_on_mutex.c] 
+ * Races on pthread_barrier_t:   
+[http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/race_on_barrier.c   
+output_tests/race_on_barrier.c]   
+[http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/race_on_barrier2.c   
+output_tests/race_on_barrier2.c] 
+ * Leaked threads:   
+[http://code.google.com/p/data-race-test/source/browse/trunk/v2/output_tests/thread_leak3.c   
+output_tests/thread_leak3.c] 
