@@ -1,3 +1,25 @@
 #summary Format of reports
 
-TODO
+When `ThreadSanitizer` detects a bug it prints a report. Format of the reports differ depending on bug type (see DetectableBugs). We've tried to make the reports as self-explanatory as possible, but still there are some tips and tricks.
+
+
+{{{
+WARNING: ThreadSanitizer: data race (pid=9337)
+  Write of size 4 at 0x7fe3c3075190 by thread T1:
+    #0 foo1() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:9 (exe+0x000000003c9a)
+    #1 bar1() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:16 (exe+0x000000003ce4)
+    #2 Thread1(void*) /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:34 (exe+0x000000003d99)
+
+  Previous read of size 4 at 0x7fe3c3075190 by main thread:
+    #0 foo2() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:20 (exe+0x000000003d0c)
+    #1 bar2() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:29 (exe+0x000000003d74)
+    #2 main /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:41 (exe+0x000000003ddb)
+
+  As if synchronized via sleep:
+    #0 sleep /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/rtl/tsan_interceptors.cc:214 (exe+0x000000004b1e)
+    #1 Thread1(void*) /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:33 (exe+0x000000003d94)
+
+  Thread T1 (tid=9338, running) created at:
+    #0 pthread_create /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/rtl/tsan_interceptors.cc:683 (exe+0x00000000de83)
+    #1 main /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:40 (exe+0x000000003dd6)
+}}}
