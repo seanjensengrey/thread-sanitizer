@@ -2,44 +2,36 @@
 
 When `ThreadSanitizer` detects a bug it prints a report. Format of the reports differ depending on bug type (see DetectableBugs). We've tried to make the reports as self-explanatory as possible, but still there are some tips and tricks.
 
-First, let's consider the simplest reports
+First, let's consider the simplest report:
+
+{{{
 WARNING: ThreadSanitizer: thread leak (pid=9509)
   Thread T1 (tid=0, finished) created at:
     #0 pthread_create tsan_interceptors.cc:683 (exe+0x00000001fb33)
     #1 main thread_leak3.c:10 (exe+0x000000003c7e)
+}}}
 
+As you can guess, it's for thread leak (non-joined thread).
 
-WARNING: ThreadSanitizer: destroy of a locked mutex (pid=9809)
-    #0 pthread_mutex_destroy /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/rtl/tsan_interceptors.cc:753 (exe+0x00000000d5e9)
-    #1 main /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/mutex_destroy_locked.cc:16 (exe+0x000000003caa)
+Description of a thread always contains it's identifier, T1 in this case, or 'main thread'; it's OS tid (useful to match information with logs or a debugger); says whether it's currently running or finished and the stack trace where it was created.
 
-  and:
-    #0 pthread_mutex_lock /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/rtl/tsan_interceptors.cc:762 (exe+0x00000000d469)
-    #1 Thread(void*) /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/mutex_destroy_locked.cc:6 (exe+0x000000003c55)
+Each stack frame contains function name, file name, file line and column (if it's available in the debug info). In the brackets you see dynamic module name ('exe' in this case stands for main executable) and offset in the module (can be useful to match with disassembly or to dedup reports).
 
-  Mutex M1 created at:
-    #0 pthread_mutex_init /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/rtl/tsan_interceptors.cc:737 (exe+0x00000000d771)
-    #1 main /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/mutex_destroy_locked.cc:12 (exe+0x000000003c7f)
-
-
+Reports for other types of bugs are similar, with the only exception of data race reports -- they can contain a lot of blocks. Here is a simple data race report:
 
 {{{
 WARNING: ThreadSanitizer: data race (pid=9337)
   Write of size 4 at 0x7fe3c3075190 by thread T1:
-    #0 foo1() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:9 (exe+0x000000003c9a)
-    #1 bar1() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:16 (exe+0x000000003ce4)
-    #2 Thread1(void*) /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:34 (exe+0x000000003d99)
+    #0 foo1() simple_stack2.cc:9 (exe+0x000000003c9a)
+    #1 bar1() simple_stack2.cc:16 (exe+0x000000003ce4)
+    #2 Thread1(void*) simple_stack2.cc:34 (exe+0x000000003d99)
 
   Previous read of size 4 at 0x7fe3c3075190 by main thread:
-    #0 foo2() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:20 (exe+0x000000003d0c)
-    #1 bar2() /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:29 (exe+0x000000003d74)
-    #2 main /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:41 (exe+0x000000003ddb)
-
-  As if synchronized via sleep:
-    #0 sleep /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/rtl/tsan_interceptors.cc:214 (exe+0x000000004b1e)
-    #1 Thread1(void*) /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:33 (exe+0x000000003d94)
+    #0 foo2() simple_stack2.cc:20 (exe+0x000000003d0c)
+    #1 bar2() simple_stack2.cc:29 (exe+0x000000003d74)
+    #2 main simple_stack2.cc:41 (exe+0x000000003ddb)
 
   Thread T1 (tid=9338, running) created at:
-    #0 pthread_create /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/rtl/tsan_interceptors.cc:683 (exe+0x00000000de83)
-    #1 main /usr/local/google/home/dvyukov/llvm0/projects/compiler-rt/lib/tsan/lit_tests/../lit_tests/simple_stack2.cc:40 (exe+0x000000003dd6)
+    #0 pthread_create tsan_interceptors.cc:683 (exe+0x00000000de83)
+    #1 main simple_stack2.cc:40 (exe+0x000000003dd6)
 }}}
