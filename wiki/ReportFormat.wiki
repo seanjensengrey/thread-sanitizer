@@ -35,3 +35,45 @@ WARNING: ThreadSanitizer: data race (pid=9337)
     #0 pthread_create tsan_interceptors.cc:683 (exe+0x00000000de83)
     #1 main simple_stack2.cc:40 (exe+0x000000003dd6)
 }}}
+
+The report contains description of the conflicting memory accesses. For both accesses it says the address (that you can match with logs/debugger), size and whether it's read or write. Note that the first memory accesses is the "current" access, that is, the access during which the race is detected. While the second access is some previous memory access.
+
+For both accesses the report says the thread id, and shows thread creation stack (except the main thread).
+
+If the race happens on heap memory location, then the report also contains the allocation site and parameters of the heap block:
+{{{
+  Location is heap block of size 99 at 0x7d0600039030 allocated by thread T1:
+    #0 malloc tsan_interceptors.cc:316 (exe+0x000000011717)
+    #1 alloc() race_on_heap.cc:17 (exe+0x000000003dc4)
+    #2 AllocThread(void*) race_on_heap.cc:21 (exe+0x000000003def)
+}}}
+
+Sometimes you can also see the following block:
+{{{
+  As if synchronized via sleep:
+    #0 sleep tsan_interceptors.cc:214 (exe+0x000000004b9e)
+    #1 Thread1(void*) simple_stack.c:27 (exe+0x000000003da4)
+}}}
+It is added in the following situation. Thread 1 had done the first conflicting memory access. Then thread 2 had executed some sleep function (sleep(), usleep(), nanosleep(), etc), and then had done the second conflicting access. The stack trace can be useful, because tests frequently "synchronize" this way.
+
+If the threads hold some mutexes around the conflicting memory accesses, then the report is extended with the following information:
+{{{
+  Write of size 4 at 0x7f2f35fca190 by thread T1 (mutexes: write M1):
+...
+  Previous write of size 4 at 0x7f2f35fca190 by thread T2 (mutexes: write M2, read M3):
+...
+  Mutex M1 created at:
+    #0 pthread_mutex_init tsan_interceptors.cc:737 (exe+0x00000000d9b1)
+    #1 main mutexset6.cc:31 (exe+0x000000003e67)
+
+  Mutex M2 created at:
+    #0 pthread_spin_init tsan_interceptors.cc:796 (exe+0x00000000d091)
+    #1 main mutexset6.cc:32 (exe+0x000000003e78)
+
+  Mutex M3 created at:
+    #0 pthread_rwlock_init tsan_interceptors.cc:839 (exe+0x00000000c8f1)
+    #1 main mutexset6.cc:33 (exe+0x000000003e89)
+}}}
+For each memory access you can see the sets of locked mutexes and whether they were locked in write or read mode. And for each mutex the stack trace where the mutex was created.
+
+Everything else is hopefully self-explanatory.
