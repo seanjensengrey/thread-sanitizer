@@ -258,3 +258,9 @@ Supported platforms are darwin/amd64, linux/amd64 and windows/amd64.
 = Runtime Overheads =
 
 The data race detector significantly increases both memory consumption and execution time.  The concrete numbers highly dependent on the particular program, but some reference numbers would be: memory consumption ~5-10x, execution time ~2-20x.
+
+=Comments/Questions?=
+
+Send comments/questions to thread-sanitizer@googlegroups.com
+
+<g:plusone></g:plusone>
