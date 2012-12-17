@@ -1,3 +1,7 @@
 #summary C/C++ User Manual
 
 TODO
+- mention ASLR
+- mentin gdb hack
+- mention compiler flags
+- mention __has_feature(thread_sanitizer)
