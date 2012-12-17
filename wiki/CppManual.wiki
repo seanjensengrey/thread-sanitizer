@@ -136,7 +136,7 @@ No, it does not. TSan maps (but does not reserve) a lot of virtual address space
 Libc/libstdc++ static linking is not supported.
 
  * Q: What synchronization primitives are supported?
-TSan supports pthread synchronization primitives, built-in compiler atomic operations (__sync/__atomic), C++ <atomic> operations are supported with llvm libc++ (not very throughly tested, though).
+TSan supports pthread synchronization primitives, built-in compiler atomic operations (__sync/__atomic), C++ `<atomic>` operations are supported with llvm libc++ (not very throughly tested, though).
 
 =Comments/Questions?=
 
