@@ -33,13 +33,15 @@ There are a lot of various ways to trigger a data race in C++, see PopularDataRa
 
 =Obtaining ThreadSanitizer=
 
-ThreadSanitizer is part of clang 3.2 and gcc 4.8. Both not yet released, so for now you need to build it from sources (see [http://code.google.com/p/thread-sanitizer/wiki/Development Development] page).
+`ThreadSanitizer` is part of clang 3.2 and gcc 4.8. Both not yet released, so for now you need to build it from sources (see [http://code.google.com/p/thread-sanitizer/wiki/Development Development] page).
+
+=Supported Platforms=
 
 TSan is supported on Linux x86_64, tested on Ubuntu 10.04 and 12.04.
 
 =Usage=
 
-Simply compile your program with -fsanitize=thread -fPIE and link it with -fsanitize=thread -pie. To get a reasonable performance add -O1 or higher. Use -g to get file names and line numbers in the warning messages. Refer to [http://code.google.com/p/thread-sanitizer/wiki/Flags Flags] page for additional flags.
+Simply compile your program with -fsanitize=thread -fPIE and link it with -fsanitize=thread -pie. To get a reasonable performance add -O1 or higher. Use -g to get file names and line numbers in the warning messages.
 
 When you run the program, TSan will print a report if it finds a data race. Here is an example:
 
@@ -93,8 +95,27 @@ ThreadSanitizer: reported 1 warnings
 
 Refer to ReportFormat for explanation of reports format.
 
-=TODO=
+There is a bunch of runtime and compiler flags to tune behavior of TSan -- see [http://code.google.com/p/thread-sanitizer/wiki/Flags Flags].
+
+=Suppressing Reports=
+
+Sometimes you can't fix the race (e.g. in third-party code) or don't want to do it straight away. There are several options how you can suppress known reports:
+
+ * [http://code.google.com/p/thread-sanitizer/wiki/Suppressions Suppressions] files (runtime mechanism).
+ * [http://code.google.com/p/thread-sanitizer/wiki/Flags Blacklist] files (compile-time mechanism).
+ * Exclude problematic code/test under TSan with `#if defined(__has_feature) && __has_feature(thread_sanitizer)`.
+
+=How To Test=
+
+To start, run your tests using ThreadSanitizer. The race detector only finds races that happen at runtime, so it can't find races in code paths that are not executed. If your tests have incomplete coverage, you may find more races by running a binary built with -fsanitize=thread under a realistic workload.
+
+=Runtime Overhead=
+
+The cost of race detection varies by program, but for a typical program, memory usage may increase by 5-10x and execution time by 2-20x.
+
+=FAQ=
+
  * mention ASLR
- * mentin gdb hack
- * mention compiler flags
- * mention __has_feature(thread_sanitizer)
+ * mention gdb hack
+
+<g:plusone></g:plusone>
