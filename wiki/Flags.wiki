@@ -1,4 +1,6 @@
-#summary Runtime flags
+#summary Runtime and compiler flags
+
+=Runtime Flags=
 
 Runtime flags are passed via TSAN_OPTIONS environment variable, separate flags are separated with spaces, e.g.:
 {{{
@@ -20,3 +22,28 @@ $ TSAN_OPTIONS="history_size=7 force_seq_cst_atomics=1" ./myprogram
 || verbosity || 0 || Verbosity level (0 - silent, 1 - a bit of output, 2+ - more output). ||
 || flush_memory_ms || 0 || Flush information about previous memory accesses every X ms.  This can dramatically reduce memory consumption, but we observed false reports when the flag is set (seemingly to a bug in Linux kernel).  Also note that data races with flushed accesses can not be detected.  Reasonable values are 1000-20000 (1-20 seconds) depending on how quickly the program grows memory consumption. ||
 || external_symbolizer_path || || Path to llvm-symbolizer.  By default `ThreadSanitizer` uses addr2line utility to symbolize reports.  llvm-symbolizer is faster, consumes less memory and produces much better reports.  llvm-symbolizer is built as part of the LLVM build (see [http://code.google.com/p/thread-sanitizer/wiki/Development Development] page). ||
+
+=Compiler Flags=
+
+The following flags can be passed to clang compiler:
+
+|| Flag name || Default value || Description ||
+|| -mllvm -tsan-blacklist || || Pass a blacklist file (see below) ||
+|| -mllvm -tsan-instrument-memory-accesses || true || If set to false, turns off instrumentation of memory accesses. Data races won't be detected in such files. ||
+|| -mllvm -tsan-instrument-atomics || true || If set to false, turns off instrumentation of atomic operations. Synchronization via atomic operations won't be tracked in such files. ||
+|| -mllvm -tsan-instrument-func-entry-exit || true || If set to false, turns off instrumentation of function entry/exit. Stack frames won't be restored in such files. ||
+|| -gline-tables-only || || Emit debug line number tables only. Significantly reduces debug info size. ||
+|| -gcolumn-info || || Emit source column debug info. Increases debug info, but provides better reports. Works only with llvm-symbolizer (see external_symbolizer_path above) ||
+
+=Blacklist Format=
+
+{{{
+# Ignore exactly this function (the names are mangled)
+fun:MyFooBar
+# Ignore MyFooBar(void) if it is in C++:
+fun:_Z8MyFooBarv
+# Ignore all function containing MyFooBar
+fun:*MyFooBar*
+# Ignore the whole file
+src:file_with_tricky_code.cc
+}}}
