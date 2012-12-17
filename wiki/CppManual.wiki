@@ -129,6 +129,15 @@ Run as:
 $ gdb -ex 'set disable-randomization off' --args ./a.out
 }}}
 
+ * Q: Does it actually use hundreds of GBs of memory (as I see in top)?
+No, it does not. TSan maps (but does not reserve) a lot of virtual address space. This means that tools like ulimit may not work as expected.
+
+ * Q: I want to link libc/libstdc++ statically into my program. With `ThreadSanitizer` it produces either link-time or run-time errors.
+Libc/libstdc++ static linking is not supported.
+
+ * Q: What synchronization primitives are supported?
+TSan supports pthread synchronization primitives, built-in compiler atomic operations (__sync/__atomic), C++ <atomic> operations are supported with llvm libc++ (not very throughly tested, though).
+
 =Comments/Questions?=
 
 Send comments/questions to thread-sanitizer@googlegroups.com
