@@ -1,12 +1,12 @@
 #summary High-level algorithm description
 
 =Summary=
-Here we provide a high-level description of ThreadSanitizer (version 2) algorithm.
+Here we provide a high-level description of `ThreadSanitizer` (version 2) algorithm.
 The tool is work-in-progress, so some details may change in future.
-This is the second version of ThreadSanitizer,
+This is the second version of `ThreadSanitizer`,
 the first (slow and deprecated) version can be found [http://code.google.com/p/data-race-test here].
 
-ThreadSanitizer consists of two parts:
+`ThreadSanitizer` consists of two parts:
 instrumentation module and a run-time library.
 
 =Instrumentation=
@@ -112,7 +112,10 @@ def StoreIfNotYetStored(shadow_address, store_word):
 }}}
 
 ==Event Trace==
-ThreadSanitizer needs to report stack traces and other information for *previous* accesses
+`ThreadSanitizer` needs to report stack traces and other information for *previous* accesses
 involved in a data race.
 `LogEvent(tid, pc)` (see above) stores the access event in a large thread-local
 circular buffer for later recovery. *TODO*: add more detail.
+
+==GNU Tools Cauldron 2012 Presentation==
+[http://gcc.gnu.org/wiki/cauldron2012?action=AttachFile&do=get&target=kcc.pdf Finding races and memory errors with compiler instrumentation]
