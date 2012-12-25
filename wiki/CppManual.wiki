@@ -31,7 +31,7 @@ int main() {
 
 There are a lot of various ways to trigger a data race in C++, see PopularDataRaces, TSan detects all of them and more -- DetectableBugs.
 
-=Obtaining ThreadSanitizer=
+=Obtaining `ThreadSanitizer`=
 
 `ThreadSanitizer` is part of clang 3.2 and gcc 4.8. Both not yet released, so for now you need to build it from sources (see [http://code.google.com/p/thread-sanitizer/wiki/Development Development] page).
 
