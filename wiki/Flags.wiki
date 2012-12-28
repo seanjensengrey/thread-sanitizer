@@ -29,7 +29,7 @@ $ TSAN_OPTIONS="history_size=7 force_seq_cst_atomics=1" ./myprogram
 The following flags can be passed to clang compiler:
 
 || Flag name || Default value || Description ||
-|| -mllvm -tsan-blacklist || || Pass a blacklist file (see below) ||
+|| -fsanitize-blacklist= || || Pass a blacklist file (see below) ||
 || -mllvm -tsan-instrument-memory-accesses || true || If set to false, turns off instrumentation of memory accesses. Data races won't be detected in such files. ||
 || -mllvm -tsan-instrument-atomics || true || If set to false, turns off instrumentation of atomic operations. Synchronization via atomic operations won't be tracked in such files. ||
 || -mllvm -tsan-instrument-func-entry-exit || true || If set to false, turns off instrumentation of function entry/exit. Stack frames won't be restored in such files. ||
