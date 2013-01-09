@@ -216,4 +216,5 @@ If you are indeed a black belt (are you?), you probably know about CAS and other
   # [http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html The "Double-Checked Locking is Broken" Declaration]
   # http://en.wikipedia.org/wiki/Memory_barrier
   # http://en.wikipedia.org/wiki/Volatile_variable
-  # http://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong
+  # [http://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong Benign data races: what could possibly go wrong?]
+  # [http://www.usenix.org/event/hotpar11/tech/final_files/Boehm.pdf How to miscompile programs with “benign” data races]
