@@ -216,3 +216,4 @@ But remember -- every time you implement a custom lock-free synchronization you 
   # [http://www.cs.umd.edu/~pugh/java/memoryModel/DoubleCheckedLocking.html The "Double-Checked Locking is Broken" Declaration]
   # http://en.wikipedia.org/wiki/Memory_barrier
   # http://en.wikipedia.org/wiki/Volatile_variable
+  # http://software.intel.com/en-us/blogs/2013/01/06/benign-data-races-what-could-possibly-go-wrong
