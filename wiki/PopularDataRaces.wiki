@@ -69,7 +69,7 @@ void Thread2() {
 
 Consider the following code:
 {{{
-bool done = true;
+bool done = false;
 
 void Thread1() {
   while (!done) {
