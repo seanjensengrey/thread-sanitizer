@@ -15,7 +15,9 @@ The suppression types are:
 || mutex || suppresses reports related to mutexes (destruction of a locked mutex) ||
 || signal || suppresses reports related to signal handlers (handler calls malloc()) ||
 
-Suppression string is matched with functions names and file names in the main (first) stack of the report.  The string can contain `*` symbol that matches with any substring.  `*` is automatically prepended and appended to each suppression string.
+Suppression string is matched with functions names and file names in the main (first) stack of the report (for data races it's matched with the previous memory access stack as well).  Suppressions also matched with global variable names if present.
+
+The suppression string can contain `*` symbol that matches with any substring.  `*` is automatically prepended and appended to each suppression string.  `^` and `$` are matched with string begin and end respectively.
 
 Comment lines start with `#`.
 
@@ -32,6 +34,12 @@ race:NuclearRocket::Launch
 
 # The race is introduced in patch 456. Bug 567.
 race:src/surgery/laser_scalpel.cc
+
+# Global var global_var is racy. Bug 568.
+race:global_var
+
+# short() function is racy, but not match any other functions containing "short". Bug 569.
+race:^short$
 
 # The following thread leaks. Bug 678.
 thread:MonitoringThread
