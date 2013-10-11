@@ -3,7 +3,7 @@
 = Introduction =
 
 `ThreadSanitizer` understands various flavors of compiler built-in atomic operations:
- # [http://gcc.gnu.org/onlinedocs/gcc-4.3.5/gcc/Atomic-Builtins.html __sync_fetch_and_add]. This does not support atomic store operation and precise memory ordering.
+ # [http://gcc.gnu.org/onlinedocs/gcc-4.3.5/gcc/Atomic-Builtins.html __sync_fetch_and_add]. This does not support atomic load operation and precise memory ordering.
  # [http://clang.llvm.org/docs/LanguageExtensions.html#langext-c11-atomic __c11_atomic_fetch_add]. This is supported only by clang.
  # [http://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html __atomic_load_n]. This requires relatively fresh compiler (at least gcc 4.7).
 
