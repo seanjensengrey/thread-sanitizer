@@ -3,25 +3,21 @@
 = Introduction =
 
 `ThreadSanitizer` understands various flavors of compiler built-in atomic operations:
- # [http://gcc.gnu.org/onlinedocs/gcc-4.3.5/gcc/Atomic-Builtins.html __sync_fetch_and_add]
- # [http://clang.llvm.org/docs/LanguageExtensions.html#langext-c11-atomic __c11_atomic_fetch_add]
- # [http://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html __atomic_load_n]
-
-Option 1 does not support atomic store operation and precise memory ordering.
-Option 2 is supported only by clang.
-Option 3 requires relatively fresh compiler (at least gcc 4.7).
+ # [http://gcc.gnu.org/onlinedocs/gcc-4.3.5/gcc/Atomic-Builtins.html __sync_fetch_and_add]. This does not support atomic store operation and precise memory ordering.
+ # [http://clang.llvm.org/docs/LanguageExtensions.html#langext-c11-atomic __c11_atomic_fetch_add]. This is supported only by clang.
+ # [http://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html __atomic_load_n]. This requires relatively fresh compiler (at least gcc 4.7).
 
 If std::atomic<> type is implemented using some sort of compiler built-ins (e.g. libc++), then `ThreadSanitizer` will understand it as well.
-
-If you need to support old compilers as well, then you can something
-along the lines I've done in re2:
-https://codereview.appspot.com/9586043/diff/31001/util/atomicops.h
-I.e. you introduce an abstract atomics interface and implement it
-using the new compiler intrinsics on newer compilers and using
-whatever you use now on older compilers.
 
 Also `ThreadSanitizer` runtime provides own set of atomic operations of the form:
 {{{
 __tsan_atomic8 __tsan_atomic8_load(const volatile __tsan_atomic8 *a, __tsan_memory_order mo);
 }}}
 The full list is available [http://llvm.org/viewvc/llvm-project/compiler-rt/trunk/lib/tsan/rtl/tsan_interface_atomic.h?view=markup here].
+
+So there are 3 options:
+ # Use only compiler intrinsics (or std::atomic<>).
+ # Use home-grown atomic operations for old compilers, for newer compilers use __atomic_load_n atomic operations.
+ # Use home-grown atomic operations for normal build, under tsan use __tsan_atomic8_load atomic operations.
+
+You can see an example of option 2 [https://codereview.appspot.com/9586043/diff/31001/util/atomicops.h here].
