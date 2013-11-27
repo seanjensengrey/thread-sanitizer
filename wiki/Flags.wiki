@@ -1,5 +1,5 @@
 #summary Runtime and compiler flags
-
+<wiki:toc max_depth="1" />
 =Runtime Flags=
 
 Runtime flags are passed via TSAN_OPTIONS environment variable, separate flags are separated with spaces, e.g.:
