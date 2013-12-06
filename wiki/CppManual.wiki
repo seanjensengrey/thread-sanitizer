@@ -1,5 +1,5 @@
 #summary C/C++ User Manual
-
+<wiki:toc max_depth="1" />
 =Introduction=
 
 `ThreadSanitizer` (aka TSan) is a data race detector for C/C++. Data races are one of the most common and hardest to debug types of bugs in concurrent systems. A data race occurs when two threads access the same variable concurrently and at least one of the accesses is write. [http://en.wikipedia.org/wiki/C%2B%2B11 C++11] standard officially bans data races as _undefined behavior_.
