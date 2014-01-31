@@ -140,6 +140,11 @@ Libc/libstdc++ static linking is not supported.
  * Q: What synchronization primitives are supported?
 TSan supports pthread synchronization primitives, built-in compiler atomic operations (__sync/__atomic), C++ `<atomic>` operations are supported with llvm libc++ (not very throughly tested, though).
 
+ * Q: I see what looks like a false report inside the libstdc++ (libc++) code. 
+This may happen in c++11 mode. We are not aware of any such case today, but ThreadSanitizer is not heavily tested on code that uses c++11 threading.
+A likely solution would be to rebuild libstdc++ (libc++) with ThreadSanitizer (this might be tricky, and the process changes periodically; contact us for details).
+It is also possible that libstdc++ (libc++) has a bug, we've seen at least [http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59215 one such] before. 
+
 =Comments/Questions?=
 
 Send comments/questions to thread-sanitizer@googlegroups.com
