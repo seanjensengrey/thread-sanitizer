@@ -37,7 +37,7 @@ There are a lot of various ways to trigger a data race in C++, see PopularDataRa
 
 =Supported Platforms=
 
-TSan is supported on Linux x86_64, tested on Ubuntu 10.04 and 12.04.
+TSan is supported on Linux x86_64, tested on Ubuntu 12.04.
 
 =Usage=
 
