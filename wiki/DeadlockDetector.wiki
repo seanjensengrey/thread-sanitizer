@@ -1,0 +1,60 @@
+#summary DeadlockDetector bundled with ThreadSanitizer
+
+= Introduction =
+
+The current Clang trunk version of ThreadSanitizer has an *experimental*
+(i.e. "untested", "no warranty", etc) detector of lock order inversions (potential deadlocks).
+
+Current status:
+  * Only `pthread_mutex_lock`/`pthread_mutex_unlock` are supported.
+  * Tested only on tiny test cases. 
+
+Contribution is welcome, first of all in form of tests. 
+
+= Usage =
+Just use `TSAN_OPTIONS=detect_deadlocks=1` when running your tsan-instrumented program. 
+{{{
+% cat mutex_cycle2.c 
+#include <pthread.h>
+
+int main() {
+  pthread_mutex_t mu1, mu2;
+  pthread_mutex_init(&mu1, NULL);
+  pthread_mutex_init(&mu2, NULL);
+
+  // mu1 => mu2
+  pthread_mutex_lock(&mu1);
+  pthread_mutex_lock(&mu2);
+  pthread_mutex_unlock(&mu2);
+  pthread_mutex_unlock(&mu1);
+
+  // mu2 => mu1
+  pthread_mutex_lock(&mu2);
+  pthread_mutex_lock(&mu1);  // <<<<<<< OOPS
+  pthread_mutex_unlock(&mu1);
+  pthread_mutex_unlock(&mu2);
+
+  pthread_mutex_destroy(&mu1);
+  pthread_mutex_destroy(&mu2);
+}
+% clang -g  -fsanitize=thread mutex_cycle2.c
+% TSAN_OPTIONS=detect_deadlocks=1 ./a.out 
+==================
+WARNING: ThreadSanitizer: lock-order-inversion (potential deadlock) (pid=4064)
+  path: M0 => M1 => M0
+    #0 pthread_mutex_lock
+    #1 main /tmp/mutex_cycle2.c:16 (a.out+0x000000089654)
+
+  Mutex M0 (0x7ffff91ac038) created at:
+    #0 pthread_mutex_init
+    #1 main /tmp/mutex_cycle2.c:5 (a.out+0x0000000895f6)
+
+  Mutex M1 (0x7ffff91ac010) created at:
+    #0 pthread_mutex_init
+    #1 main /tmp/mutex_cycle2.c:6 (a.out+0x00000008960c)
+
+SUMMARY: ThreadSanitizer: lock-order-inversion (potential deadlock) /tmp/mutex_cycle2.c:16 main
+==================
+ThreadSanitizer: reported 1 warnings
+% 
+}}}
