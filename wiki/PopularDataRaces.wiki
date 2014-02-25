@@ -414,3 +414,18 @@ void UserCompletionCallback(Foo *f) {
 }}}
 
 In this example destructor of `MutexLock` can unlock already deleted mutex, if `UserCompletionCallback` is already started executing on another thread.
+
+=Race on a file descriptor=
+File descriptors are fully synchronized internally, but a race in user code can lead to a read/write operation issued on a wrong file descriptor. Consider the following example:
+
+{{{
+int fd = open(...);
+
+// Thread 1.
+write(fd, ...);
+
+// Thread 2.
+close(fd);
+}}}
+
+If threads 1 and 2 race with each other, and the file descriptor number happens to be reused right after close, write can be issued for a wrong file or socket. This can lead to e.g. leaking sensitive data into an untrusted network connection.
