@@ -385,3 +385,32 @@ int main() {
 }
 
 }}}
+
+=Race on a mutex=
+Lock and unlock operations on a mutex are synchronized, but a mutex still can be a subject to unsafe publication or racy destruction. Consider the following example:
+
+{{{
+class Foo {
+  Mutex m_;
+  ...
+
+ public:
+  // Asynchronous completion notification.
+  void OnDone(Callback *c) {
+    MutexLock l(&m_);
+    // handle completion
+    // ...
+    // schedule user completion callback
+    ThreadPool::Schedule(c);
+  }
+  ...
+};
+
+void UserCompletionCallback(Foo *f) {
+  delete f;  // don't need it anymore
+  // notify another thread about completion
+  // ...
+}
+}}}
+
+In this example destructor of `MutexLock` can unlock already deleted mutex, if `UserCompletionCallback` is already started executing on another thread.
