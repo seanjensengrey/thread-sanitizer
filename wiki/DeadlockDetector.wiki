@@ -14,7 +14,8 @@ Contribution is welcome, first of all in form of tests.
 
 =Algorithm=
 The deadlock detector maintains a directed graph of lock acquisitions. 
-When a lock B is acquired when a lock A is being held by the same thread, a directed edge `A=>B` is added to the lock acquisition graph.
+If a lock B is acquired while a lock A is being held by the same thread,
+a directed edge `A=>B` is added to the lock acquisition graph.
 A potential deadlock is reported when there is a cycle in the graph. 
 
 = Usage =
