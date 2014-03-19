@@ -74,3 +74,10 @@ WARNING: ThreadSanitizer: lock-order-inversion (potential deadlock) (pid=18360)
 SUMMARY: ThreadSanitizer: lock-order-inversion (potential deadlock) /tmp/mutex_cycle2.c:9 main
 % 
 }}}
+
+=Flags=
+The flags are passed in TSAN_OPTIONS env var for tsan, and DSAN_OPTIONS for stand-alone deadlock detector.
+
+|| Flag name || Default value || Description ||
+|| detect_deadlocks || false || Enable deadlock detector (for tsan) ||
+|| second_deadlock_stack || false || Report two stacks per edge instead of one (where edge destination mutex is locked and where edge source mutex is locked) ||
