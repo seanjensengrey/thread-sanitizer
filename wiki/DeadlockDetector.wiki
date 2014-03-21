@@ -45,33 +45,28 @@ int main() {
   pthread_mutex_destroy(&mu2);
 }
 % clang -g  -fsanitize=thread mutex_cycle2.c
-% TSAN_OPTIONS=detect_deadlocks=1 ./a.out 
-WARNING: ThreadSanitizer: lock-order-inversion (potential deadlock) (pid=18360)
-  path: M0 => M1 => M0
-
-  edge: M0 => M1
+% TSAN_OPTIONS=detect_deadlocks=1:second_deadlock_stack=1 ./a.out 
+WARNING: ThreadSanitizer: lock-order-inversion (potential deadlock) (pid=24257)
+  Cycle in lock order graph: M0 (0x7fff6bc83f68) => M1 (0x7fff6bc83f40) => M0
+  
+  Mutex M1 acquired here while holding mutex M0:
     #0 pthread_mutex_lock
-    #1 main /tmp/mutex_cycle2.c:9 (a.out+0x00000008bad8)
-
+    #1 main /tmp/mutex_cycle2.c:10
+    
+  Mutex M0 previously acquired by the same thread here:
     #0 pthread_mutex_lock
-    #1 main /tmp/mutex_cycle2.c:10 (a.out+0x00000008bae4)
-
-  edge: M1 => M0
+    #1 main /tmp/mutex_cycle2.c:9
+    
+  Mutex M0 acquired here while holding mutex M1:
     #0 pthread_mutex_lock
-    #1 main /tmp/mutex_cycle2.c:15 (a.out+0x00000008bb08)
-
+    #1 main /tmp/mutex_cycle2.c:16
+    
+  Mutex M1 previously acquired by the same thread here:
     #0 pthread_mutex_lock
-    #1 main /tmp/mutex_cycle2.c:16 (a.out+0x00000008bb14)
+    #1 main /tmp/mutex_cycle2.c:15
+    
+SUMMARY: ThreadSanitizer: lock-order-inversion (potential deadlock) /tmp/mutex_cycle2.c:10 main
 
-  Mutex M0 (0x7fff29bae908) created at:
-    #0 pthread_mutex_init
-    #1 main /tmp/mutex_cycle2.c:5 (a.out+0x00000008bab6)
-
-  Mutex M1 (0x7fff29bae8e0) created at:
-    #0 pthread_mutex_init
-    #1 main /tmp/mutex_cycle2.c:6 (a.out+0x00000008bacc)
-
-SUMMARY: ThreadSanitizer: lock-order-inversion (potential deadlock) /tmp/mutex_cycle2.c:9 main
 % 
 }}}
 
