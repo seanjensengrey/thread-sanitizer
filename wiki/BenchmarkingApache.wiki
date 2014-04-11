@@ -13,9 +13,6 @@ Config lines to play with in httpd.conf to change the number of threads/processe
 {{{
 ServerLimit         16
 StartServers         2
-MaxRequestWorkers  150
-MinSpareThreads     25
-MaxSpareThreads     75
 ThreadsPerChild     25
 }}}
 <wiki:comment>
