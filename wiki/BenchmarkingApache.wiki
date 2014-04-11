@@ -8,6 +8,16 @@ wget https://thread-sanitizer.googlecode.com/svn/trunk/benchmarks/apache/run.sh
 # Edit run.sh to set CLANG_BIN!
 ./run.sh
 }}}
+
+Config lines to play with in httpd.conf to change the number of threads/processes:
+{{{
+ServerLimit         16
+StartServers         2
+MaxRequestWorkers  150
+MinSpareThreads     25
+MaxSpareThreads     75
+ThreadsPerChild     25
+}}}
 <wiki:comment>
 run.sh doesn't instrument libapr yet, ignore the lines below.
 {{{
