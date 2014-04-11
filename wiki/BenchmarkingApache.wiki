@@ -5,7 +5,7 @@ tar -zxf httpd-2.4.9.tar.gz
 run.sh
 }}}
 
-#run.sh doesn't instrument libapr yet, ignore the lines below.
-#{{{
-#wget http://apache.mirrors.tds.net//apr/apr-1.5.0.tar.gz
-#}}}
+# run.sh doesn't instrument libapr yet, ignore the lines below.
+# {{{
+# wget http://apache.mirrors.tds.net//apr/apr-1.5.0.tar.gz
+# }}}
