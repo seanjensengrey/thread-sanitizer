@@ -6,6 +6,8 @@
 
  * [https://code.google.com/p/webrtc/issues/list?can=1&q=tsan+errors 37 data races in WebRTC]
 
+ * [http://marc.info/?l=openssl-cvs&m=134947022905662 A data race in OpenSSL]
+
  * 1000+ C++ data races in Google internal codebase
 
  * 170+ Go data races in Google internal codebase
