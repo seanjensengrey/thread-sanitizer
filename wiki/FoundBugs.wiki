@@ -8,6 +8,8 @@
 
  * [http://marc.info/?l=openssl-cvs&m=134947022905662 A data race in OpenSSL]
 
+ * 10+ data races and mutex errors in an unreleased Cloudera C++ software project
+
  * 1000+ C++ data races in Google internal codebase
 
  * 170+ Go data races in Google internal codebase
