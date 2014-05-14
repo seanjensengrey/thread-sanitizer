@@ -10,6 +10,8 @@
 
  * [http://marc.info/?l=openssl-cvs&m=134947022905662 A data race in OpenSSL]
 
+ * 2 data races in libgomp ([https://gcc.gnu.org/bugzilla/show_bug.cgi?id=40362 1] [https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59194 2])
+
  * 10+ data races and mutex errors in an unreleased Cloudera C++ software project
 
  * 1000+ C++ data races in Google internal codebase
