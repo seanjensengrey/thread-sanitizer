@@ -12,6 +12,8 @@
 
  * 2 data races in libgomp ([https://gcc.gnu.org/bugzilla/show_bug.cgi?id=40362 1] [https://gcc.gnu.org/bugzilla/show_bug.cgi?id=59194 2])
 
+ * [http://llvm.org/viewvc/llvm-project?view=revision&revision=203138 1 data race in LLVM]
+
  * 10+ data races and mutex errors in an unreleased Cloudera C++ software project
 
  * 1000+ C++ data races in Google internal codebase
