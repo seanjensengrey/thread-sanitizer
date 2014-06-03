@@ -1,5 +1,5 @@
 #summary Some of the bugs found by ThreadSanitizer
-
+=Data races=
  * [https://code.google.com/p/chromium/issues/list?can=1&q=Stability%3DThreadSanitizer++v2+-status%3Dduplicate+%22threadsanitizer+data+race%22&sort=opened+modified&colspec=ID+Pri+M+Iteration+ReleaseBlock+Cr+Status+Owner+Summary+OS+Modified+Opened&x=m&y=releaseblock&cells=tiles 106 data races in Chromium]
  
  * [https://bugzilla.mozilla.org/show_bug.cgi?id=tsan-maintenance 20+ races in Firefox]
@@ -25,3 +25,6 @@
  * 170+ Go data races in Google internal codebase
 
 plus some others that we don't know about.
+
+=Deadlocks=
+ * 1 (so far) real deadlock in Chromium: http://crbug.com/377420
