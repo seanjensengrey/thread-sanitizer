@@ -18,3 +18,15 @@ Some implementation ideas:
   * Find races in both kmalloc and vmalloc ranges.
   * Use two-level shadow memory mapping scheme for now.
   * Do a flush when we run out of clocks. The flush might work as follows. There is a global epoch variable which is increased during each flush. Each thread have a local epoch variable. When a thread is starting it will flush itself if the thread local epoch is less than the global one.
+
+= Building =
+
+{{{
+git clone https://github.com/google/ktsan.git ktsan
+svn checkout http://address-sanitizer.googlecode.com/svn/trunk/vagrant_kasan
+cp vagrant_kasan/kernel_config ktsan/.config
+cd ktsan
+make oldconfig
+# select KTSAN option
+make
+}}}
