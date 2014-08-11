@@ -26,7 +26,15 @@ git clone https://github.com/google/ktsan.git ktsan
 svn checkout http://address-sanitizer.googlecode.com/svn/trunk/vagrant_kasan
 cp vagrant_kasan/kernel_config ktsan/.config
 cd ktsan
-make oldconfig
-# select KTSAN option
-make
+make oldconfig  # select KTSAN option
+make -j64 deb-pkg LOCALVERSION=-tsan
+}}}
+
+Copy new kernel to vagrant:
+{{{
+vagrant up
+vagrant ssh-config > ssh_config
+scp -F ./ssh_config linux-* default:/home/vagrant/
+vagrant ssh -c "sudo dpkg -i linux-headers-3.16.0-tsan_3.16.0-tsan-2_amd64.deb && sudo dpkg -i linux-libc-dev_3.16.0-tsan-2_amd64.deb && sudo dpkg -i linux-image-3.16.0-tsan_3.16.0-tsan-2_amd64.deb"
+vagrant reload
 }}}
