@@ -15,6 +15,7 @@ The suppression types are:
 || mutex || suppresses reports related to mutexes (destruction of a locked mutex) ||
 || signal || suppresses reports related to signal handlers (handler calls malloc()) ||
 || deadlock || suppresses lock inversion reports ||
+|| called_from_lib || suppresses all interceptors in a particular library ||
 
 Suppression string is matched with functions names and file names in the main (first) stack of the report (for data races it's matched with the previous memory access stack as well).  Suppressions also matched with global variable names if present.
 
@@ -44,4 +45,7 @@ race:^short$
 
 # The following thread leaks. Bug 678.
 thread:MonitoringThread
+
+# Uninstrumented library.
+called_from_lib:libzmq.so
 }}}
