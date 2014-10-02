@@ -46,6 +46,10 @@ make oldconfig  # select KTSAN option
 make CC='$GCC_KTSAN/install/bin/gcc' -j64 deb-pkg LOCALVERSION=-tsan
 }}}
 
+Install VirtualBox (https://www.virtualbox.org/wiki/Downloads) and Vagrant (https://www.vagrantup.com/downloads.html).
+It's better to download newer versions from their official sites other than use the ones from the apt repository.
+These instructions were written for VirtualBox 4.3.16 and Vagrant 1.6.5.
+
 Copy new kernel to vagrant:
 {{{
 vagrant up
