@@ -21,13 +21,29 @@ Some implementation ideas:
 
 = Building =
 
+Build custom GCC:
+{{{
+svn checkout svn://gcc.gnu.org/svn/gcc/trunk $GCC_KTSAN
+cd $GCC_KTSAN
+svn up -r 214674
+patch -p0 -i gcc_ktsan.patch 
+mkdir build
+mkdir install
+cd build/
+sudo apt-get install flex bison libc6-dev libc6-dev-i386 libgmp3-dev libmpfr-dev libmpc-dev
+../configure --enable-languages=c,c++ --disable-bootstrap --enable-checking=no --with-gnu-as --with-gnu-ld --with-ld=/usr/bin/ld.bfd --prefix=$GCC_KTSAN/install/
+make -j64
+make install
+}}}
+
+Build ktsan:
 {{{
 git clone https://github.com/google/ktsan.git ktsan
 svn checkout http://address-sanitizer.googlecode.com/svn/trunk/vagrant_kasan
 cp vagrant_kasan/kernel_config ktsan/.config
 cd ktsan
 make oldconfig  # select KTSAN option
-make -j64 deb-pkg LOCALVERSION=-tsan
+make CC='$GCC_KTSAN/install/bin/gcc' -j64 deb-pkg LOCALVERSION=-tsan
 }}}
 
 Copy new kernel to vagrant:
