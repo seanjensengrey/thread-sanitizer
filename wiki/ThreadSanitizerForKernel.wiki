@@ -5,13 +5,15 @@
 A dynamic data race error detector for Linux kernel.
 Currently in development.
 
+Repository: https://github.com/google/ktsan
+
 
 = Details =
 
 Some implementation ideas:
   * Make some internal structures per CPU instead of per thread (VC cache, what else?). VCs themselves stay per thread.
   * Monitor some kernel thread scheduler events (thread execution started/stopped on CPU).
-  * Disable interrupts during TSan events (kernel scheduler events, synchronization events) (CLI, STI). (Why?)
+  * Disable interrupts during TSan events (kernel scheduler events, synchronization events) (CLI, STI).
   * Use 4 bytes per slot: 1 for thread id, 2 for clock, 1 for everything else (flags, ...).
   * Different threads might have the same thread id (only 256 different values available).
   * When clock overflows it is possible to change thread id and connect "old" and "new" threads with a happens-before relation.
@@ -21,7 +23,7 @@ Some implementation ideas:
 
 = Building =
 
-Build custom GCC:
+Since ktsan uses compiler instrumentation, a custom GCC is required:
 {{{
 svn checkout svn://gcc.gnu.org/svn/gcc/trunk $GCC_KTSAN
 cd $GCC_KTSAN
