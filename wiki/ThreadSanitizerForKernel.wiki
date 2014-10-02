@@ -52,7 +52,7 @@ The deb packages will appear in the ktsan parent directory.
 
 To use the current non-stable development version, checkout tsan-dev branch instead.
 
-Install VirtualBox (https://www.virtualbox.org/wiki/Downloads) and Vagrant (https://www.vagrantup.com/downloads.html).
+Install !VirtualBox (https://www.virtualbox.org/wiki/Downloads) and Vagrant (https://www.vagrantup.com/downloads.html).
 It's better to download newer versions from their official sites other than use the ones from the apt repository.
 These instructions were written for !VirtualBox 4.3.16 and Vagrant 1.6.5.
 
