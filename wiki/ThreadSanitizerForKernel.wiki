@@ -3,7 +3,7 @@
 = Introduction =
 
 A dynamic data race error detector for Linux kernel.
-Currently work in progress.
+Currently in development.
 
 
 = Details =
@@ -36,15 +36,19 @@ make -j64
 make install
 }}}
 
-Build ktsan:
+Build kernel deb packages with ktsan enabled:
 {{{
 git clone https://github.com/google/ktsan.git ktsan
-svn checkout http://address-sanitizer.googlecode.com/svn/trunk/vagrant_kasan
-cp vagrant_kasan/kernel_config ktsan/.config
-cd ktsan
+svn checkout http://address-sanitizer.googlecode.com/svn/trunk/vagrant_kasan vagrant
+cp vagrant/kernel_config ktsan/.config
+cd ktsan/
 make oldconfig  # select KTSAN option
 make CC='$GCC_KTSAN/install/bin/gcc' -j64 deb-pkg LOCALVERSION=-tsan
 }}}
+
+The deb packages will appear in the ktsan parent directory.
+
+To use the current non-stable development version, checkout tsan-dev branch instead.
 
 Install VirtualBox (https://www.virtualbox.org/wiki/Downloads) and Vagrant (https://www.vagrantup.com/downloads.html).
 It's better to download newer versions from their official sites other than use the ones from the apt repository.
@@ -52,6 +56,7 @@ These instructions were written for VirtualBox 4.3.16 and Vagrant 1.6.5.
 
 Copy new kernel to vagrant:
 {{{
+cd vagrant/
 vagrant up
 vagrant ssh-config > ssh_config
 scp -F ./ssh_config linux-* default:/home/vagrant/
