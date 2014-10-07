@@ -7,6 +7,7 @@ Currently in development.
 
 Repository: https://github.com/google/ktsan
 
+Some reports produced by the tool are available [ThreadSanitizerForKernelReports here].
 
 = Details =
 
