@@ -1,0 +1,41 @@
+= Revision 8e099d1e8be3f598dcefd04d3cd5eb3673d4e098 =
+
+{{{
+==================================================================
+ThreadSanitizer: data-race in cache_reap
+
+Write of size 4 by thread T23 (K20):
+ [<ffffffff8122035c>] cache_reap+0x12c/0x320 /mm/slab.c:4075
+ [<ffffffff810aa679>] process_one_work+0x2e9/0x730 /kernel/workqueue.c:2023
+ [<ffffffff810ab583>] worker_thread+0xc3/0x730 /kernel/workqueue.c:2154
+ [<ffffffff810b5169>] kthread+0x169/0x180 /kernel/kthread.c:207
+ [<ffffffff81dc4bfc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+
+Previous write of size 4 by thread T1 (K1):
+ [<     inlined    >] kmem_cache_alloc_trace+0x801/0x8c0 cache_alloc_refill /mm/slab.c:2943
+ [<     inlined    >] kmem_cache_alloc_trace+0x801/0x8c0 ____cache_alloc /mm/slab.c:3097
+ [<     inlined    >] kmem_cache_alloc_trace+0x801/0x8c0 __do_cache_alloc /mm/slab.c:3355
+ [<     inlined    >] kmem_cache_alloc_trace+0x801/0x8c0 slab_alloc /mm/slab.c:3394
+ [<ffffffff81222e01>] kmem_cache_alloc_trace+0x801/0x8c0 /mm/slab.c:3571
+ [<     inlined    >] device_private_init+0x3b/0xe0 kmalloc /include/linux/slab.h:457
+ [<     inlined    >] device_private_init+0x3b/0xe0 kzalloc /include/linux/slab.h:639
+ [<ffffffff8176a6fb>] device_private_init+0x3b/0xe0 /drivers/base/core.c:929
+ [<ffffffff8176ae48>] device_add+0x6a8/0x9d0 /drivers/base/core.c:973
+ [<ffffffff8176b191>] device_register+0x21/0x30 /drivers/base/core.c:1128
+ [<ffffffff81773a2c>] register_cpu+0x19c/0x220 /drivers/base/cpu.c:351
+ [<ffffffff8100f9ec>] arch_register_cpu+0x9c/0x210 /arch/x86/kernel/topology.c:142
+ [<ffffffff8230279f>] topology_init+0x9c/0xaa /arch/x86/kernel/topology.c:169
+ [<ffffffff8230279f>] topology_init+0x9c/0xaa /arch/x86/kernel/topology.c:169
+ [<ffffffff8100032d>] do_one_initcall+0xbd/0x220 /init/main.c:794
+ [<     inlined    >] kernel_init_freeable+0x2ae/0x375 do_initcall_level /init/main.c:860
+ [<     inlined    >] kernel_init_freeable+0x2ae/0x375 do_initcalls /init/main.c:868
+ [<     inlined    >] kernel_init_freeable+0x2ae/0x375 do_basic_setup /init/main.c:887
+ [<ffffffff822fe803>] kernel_init_freeable+0x2ae/0x375 /init/main.c:1008
+ [<ffffffff810004a6>] kernel_init+0x16/0x150 /init/main.c:938
+ [<ffffffff81dc4bfc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+
+DBG: addr: ffff8801ec002328
+DBG: first offset: 0, second offset: 0
+DBG: first clock: 1312899, second clock: 2336
+==================================================================
+}}}
