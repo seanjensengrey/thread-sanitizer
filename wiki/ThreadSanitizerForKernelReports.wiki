@@ -42,39 +42,6 @@ DBG: first clock: 1312899, second clock: 2336
 
 {{{
 ==================================================================
-ThreadSanitizer: data-race in __call_rcu.constprop.60
-
-Write of size 8 by thread T30 (K27):
- [<ffffffff810fec4d>] __call_rcu.constprop.60+0x10d/0x3d0 /kernel/rcu/tree.c:2699
- [<ffffffff810fefba>] call_rcu_sched+0x2a/0x40 /kernel/rcu/tree.c:2718
- [<ffffffff810bdf5a>] __put_cred+0x7a/0xa0 /kernel/cred.c:141
- [<     inlined    >] commit_creds+0x350/0x500 put_cred /include/linux/cred.h:249
- [<ffffffff810be530>] commit_creds+0x350/0x500 /kernel/cred.c:479
- [<ffffffff810a42b6>] ____call_usermodehelper+0x1f6/0x290 /kernel/kmod.c:240
- [<ffffffff810a4387>] call_helper+0x37/0x50 /kernel/kmod.c:258
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = ffff88041fd95df0
-
-Previous write of size 8 by thread T29 (K26):
- [<ffffffff810feb87>] __call_rcu.constprop.60+0x47/0x3d0 /kernel/rcu/tree.c:2670
- [<ffffffff810fefba>] call_rcu_sched+0x2a/0x40 /kernel/rcu/tree.c:2718
- [<ffffffff81080f65>] release_task+0x7e5/0xaa0 /kernel/exit.c:208
- [<     inlined    >] do_exit+0x113e/0x13a0 exit_notify /kernel/exit.c:634
- [<ffffffff8108235e>] do_exit+0x113e/0x13a0 /kernel/exit.c:775
- [<ffffffff810a4331>] ____call_usermodehelper+0x271/0x290 /kernel/kmod.c:251
- [<ffffffff810a4387>] call_helper+0x37/0x50 /kernel/kmod.c:258
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = 0
-
-DBG: addr: ffff8801e53aaa78
-DBG: first offset: 0, second offset: 0
-DBG: T30 clock: {T30: 394, T29: 2521}
-DBG: T29 clock: {T29: 2527}
-==================================================================
-}}}
-
-{{{
-==================================================================
 ThreadSanitizer: data-race in kmem_cache_alloc
 
 Read of size 4 by thread T2 (K2):
@@ -208,5 +175,38 @@ DBG: addr: ffff8801e4ca5330
 DBG: first offset: 0, second offset: 0
 DBG: T15 clock: {T15: 234, T1: 1300044}
 DBG: T1 clock: {T1: 1300240}
+==================================================================
+}}}
+
+{{{
+==================================================================
+ThreadSanitizer: data-race in __call_rcu.constprop.60
+
+Write of size 8 by thread T30 (K27):
+ [<ffffffff810fec4d>] __call_rcu.constprop.60+0x10d/0x3d0 /kernel/rcu/tree.c:2699
+ [<ffffffff810fefba>] call_rcu_sched+0x2a/0x40 /kernel/rcu/tree.c:2718
+ [<ffffffff810bdf5a>] __put_cred+0x7a/0xa0 /kernel/cred.c:141
+ [<     inlined    >] commit_creds+0x350/0x500 put_cred /include/linux/cred.h:249
+ [<ffffffff810be530>] commit_creds+0x350/0x500 /kernel/cred.c:479
+ [<ffffffff810a42b6>] ____call_usermodehelper+0x1f6/0x290 /kernel/kmod.c:240
+ [<ffffffff810a4387>] call_helper+0x37/0x50 /kernel/kmod.c:258
+ [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = ffff88041fd95df0
+
+Previous write of size 8 by thread T29 (K26):
+ [<ffffffff810feb87>] __call_rcu.constprop.60+0x47/0x3d0 /kernel/rcu/tree.c:2670
+ [<ffffffff810fefba>] call_rcu_sched+0x2a/0x40 /kernel/rcu/tree.c:2718
+ [<ffffffff81080f65>] release_task+0x7e5/0xaa0 /kernel/exit.c:208
+ [<     inlined    >] do_exit+0x113e/0x13a0 exit_notify /kernel/exit.c:634
+ [<ffffffff8108235e>] do_exit+0x113e/0x13a0 /kernel/exit.c:775
+ [<ffffffff810a4331>] ____call_usermodehelper+0x271/0x290 /kernel/kmod.c:251
+ [<ffffffff810a4387>] call_helper+0x37/0x50 /kernel/kmod.c:258
+ [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = 0
+
+DBG: addr: ffff8801e53aaa78
+DBG: first offset: 0, second offset: 0
+DBG: T30 clock: {T30: 394, T29: 2521}
+DBG: T29 clock: {T29: 2527}
 ==================================================================
 }}}
