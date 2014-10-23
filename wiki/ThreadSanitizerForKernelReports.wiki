@@ -1,4 +1,6 @@
-= Revision 8e099d1e8be3f598dcefd04d3cd5eb3673d4e098 =
+== Revision: 8e099d1e8be3f598dcefd04d3cd5eb3673d4e098 ==
+
+tsan-dev revision: 0db4196a68779d0f3c714bb092a09a93a52b8557
 
 {{{
 ==================================================================
@@ -186,5 +188,147 @@ DBG: addr: ffff8801e3643500
 DBG: first offset: 0, second offset: 0
 DBG: T280 clock: {T280: 64290, T1: 32106500}
 DBG: T1 clock: {T1: 32616364}
+==================================================================
+}}}
+
+{{{
+==================================================================
+ThreadSanitizer: data-race in acpi_ns_attach_object
+
+Write of size 1 by thread T1 (K1):
+ [<ffffffff815b0bc3>] acpi_ns_attach_object+0x14b/0x18c /drivers/acpi/acpica/nsobject.c:184
+ [<ffffffff815a0741>] acpi_install_notify_handler+0x13f/0x2ed /drivers/acpi/acpica/evxface.c:157
+ [<     inlined    >] acpi_device_probe+0x117/0x181 acpi_device_install_notify_handler /drivers/acpi/s
+can.c:946
+ [<ffffffff81586931>] acpi_device_probe+0x117/0x181 /drivers/acpi/scan.c:991
+ [<ffffffff817738a4>] really_probe+0xa4/0x350 /drivers/base/dd.c:302
+ [<     inlined    >] __driver_attach+0xd9/0xe0 driver_probe_device /drivers/base/dd.c:399
+ [<ffffffff81773cb9>] __driver_attach+0xd9/0xe0 /drivers/base/dd.c:477
+ [<ffffffff817707fd>] bus_for_each_dev+0x9d/0xe0 /drivers/base/bus.c:311
+ [<ffffffff8177319f>] driver_attach+0x2f/0x40 /drivers/base/dd.c:496
+ [<ffffffff81772c50>] bus_add_driver+0x270/0x330 /drivers/base/bus.c:692
+ [<ffffffff81774967>] driver_register+0xd7/0x1b0 /drivers/base/driver.c:167
+ [<ffffffff81587585>] acpi_bus_register_driver+0x8b/0x9e /drivers/acpi/scan.c:1281
+ [<ffffffff82335b7c>] acpi_ac_init+0x37/0x45 /drivers/acpi/ac.c:437
+ [<ffffffff8100032d>] do_one_initcall+0xbd/0x220 /init/main.c:794
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_initcall_level /init/main.c:860
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_initcalls /init/main.c:868
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_basic_setup /init/main.c:887
+ [<ffffffff822fd81a>] kernel_init_freeable+0x2bb/0x382 /init/main.c:1008
+ [<ffffffff810004a6>] kernel_init+0x16/0x150 /init/main.c:938
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = ffff88041fc95df0
+
+Previous read of size 1 by thread T371 (K368):
+ [<ffffffff815b3a37>] acpi_ns_validate_handle+0x39/0x51 /drivers/acpi/acpica/nsutils.c:575
+ [<ffffffff815b3fa1>] acpi_evaluate_object+0x51/0x397 /drivers/acpi/acpica/nsxfeval.c:196
+ [<ffffffff8158178b>] acpi_evaluate_integer+0x8c/0xd8 /drivers/acpi/utils.c:278
+ [<ffffffff815c523d>] acpi_ac_get_state+0x5d/0xa5 /drivers/acpi/ac.c:127
+ [<ffffffff815c5356>] get_ac_property+0x31/0x75 /drivers/acpi/ac.c:151
+ [<     inlined    >] power_supply_update_leds+0x3c/0x260 power_supply_update_gen_leds /drivers/power/
+power_supply_leds.c:122
+ [<ffffffff8194c86c>] power_supply_update_leds+0x3c/0x260 /drivers/power/power_supply_leds.c:164
+ [<ffffffff8194b8c3>] power_supply_changed_work+0xb3/0x110 /drivers/power/power_supply_core.c:86
+ [<ffffffff810aaf3e>] process_one_work+0x2ee/0x730 /kernel/workqueue.c:2027
+ [<ffffffff810abe9b>] worker_thread+0xcb/0x740 /kernel/workqueue.c:2160
+ [<ffffffff810b5a2b>] kthread+0x14b/0x170 /kernel/kthread.c:207
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = 0
+
+DBG: addr: ffff8801e5911e59
+DBG: first offset: 0, second offset: 0
+DBG: T1 clock: {T1: 71561485, T371: 17781}
+DBG: T371 clock: {T371: 18001}
+==================================================================
+}}}
+
+{{{
+==================================================================
+ThreadSanitizer: data-race in scsi_schedule_eh
+
+Write of size 4 by thread T6 (K6):
+ [<ffffffff817a2dd3>] scsi_schedule_eh+0x63/0xf0 /drivers/scsi/scsi_error.c:84
+ [<ffffffff817e23fe>] ata_std_sched_eh+0x8e/0xc0 /drivers/ata/libata-eh.c:1004
+ [<ffffffff817e3398>] ata_port_schedule_eh+0x38/0x50 /drivers/ata/libata-eh.c:1044
+ [<ffffffff817d8c48>] __ata_port_probe+0xd8/0x100 /drivers/ata/libata-core.c:6115
+ [<ffffffff817d8cb0>] ata_port_probe+0x40/0x80 /drivers/ata/libata-core.c:6125
+ [<ffffffff817d8d45>] async_port_probe+0x55/0x90 /drivers/ata/libata-core.c:6150
+ [<ffffffff810bfe48>] async_run_entry_fn+0x88/0x270 /kernel/async.c:123
+ [<ffffffff810aaf3e>] process_one_work+0x2ee/0x730 /kernel/workqueue.c:2027
+ [<ffffffff810abe9b>] worker_thread+0xcb/0x740 /kernel/workqueue.c:2160
+ [<ffffffff810b5a2b>] kthread+0x14b/0x170 /kernel/kthread.c:207
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = ffff88041fc95df0
+
+Previous read of size 4 by thread T155 (K683):
+ [<ffffffff817a41e0>] scsi_error_handler+0x90/0x9f0 /drivers/scsi/scsi_error.c:2157 (discriminator 1)
+ [<ffffffff810b5a2b>] kthread+0x14b/0x170 /kernel/kthread.c:207
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = 0
+
+DBG: addr: ffff8800db5168e0
+DBG: first offset: 0, second offset: 0
+DBG: T6 clock: {T6: 4542335, T155: 9228}
+DBG: T155 clock: {T155: 9244}
+==================================================================
+}}}
+
+{{{
+==================================================================
+ThreadSanitizer: data-race in ida_pre_get
+
+Read of size 4 by thread T1 (K1):
+ [<     inlined    >] ida_pre_get+0x2f/0x170 __idr_pre_get /lib/idr.c:195
+ [<ffffffff814efdaf>] ida_pre_get+0x2f/0x170 /lib/idr.c:897
+ [<ffffffff814f0ae4>] ida_simple_get+0x54/0x110 /lib/idr.c:1094
+ [<ffffffff812f1e76>] __kernfs_new_node+0x96/0x150 /fs/kernfs/dir.c:530
+ [<ffffffff812f3797>] kernfs_new_node+0x57/0x90 /fs/kernfs/dir.c:558
+ [<ffffffff812f5f92>] __kernfs_create_file+0x62/0x140 /fs/kernfs/file.c:920
+ [<ffffffff812f6e21>] sysfs_add_file_mode_ns+0x101/0x230 /fs/sysfs/file.c:256
+ [<ffffffff812f6fa6>] sysfs_create_file_ns+0x56/0x80 /fs/sysfs/file.c:283
+ [<     inlined    >] driver_create_file+0x32/0x50 sysfs_create_file /include/linux/sysfs.h:434
+ [<ffffffff817747b2>] driver_create_file+0x32/0x50 /drivers/base/driver.c:107
+ [<ffffffff81772bf9>] bus_add_driver+0x219/0x330 /drivers/base/bus.c:698
+ [<ffffffff81774967>] driver_register+0xd7/0x1b0 /drivers/base/driver.c:167
+ [<ffffffff81776aee>] __platform_driver_register+0x9e/0xb0 /drivers/base/platform.c:566
+ [<ffffffff81776ce5>] platform_driver_probe+0x55/0x140 /drivers/base/platform.c:615
+ [<ffffffff81777514>] platform_create_bundle+0xc4/0xf0 /drivers/base/platform.c:677
+ [<ffffffff8233e9d9>] i8042_init+0x68d/0x6cb /drivers/input/serio/i8042.c:1488
+ [<ffffffff8100032d>] do_one_initcall+0xbd/0x220 /init/main.c:794
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_initcall_level /init/main.c:860
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_initcalls /init/main.c:868
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_basic_setup /init/main.c:887
+ [<ffffffff822fd81a>] kernel_init_freeable+0x2bb/0x382 /init/main.c:1008
+ [<ffffffff810004a6>] kernel_init+0x16/0x150 /init/main.c:938
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = ffff88041fd95df0
+
+Previous write of size 4 by thread T458 (K455):
+ [<ffffffff814eec85>] get_from_free_list+0x85/0xc0 /lib/idr.c:75
+ [<ffffffff814f0a46>] ida_get_new_above+0x2a6/0x2f0 /lib/idr.c:994
+ [<ffffffff814f0b09>] ida_simple_get+0x79/0x110 /lib/idr.c:1098
+ [<ffffffff812f1e76>] __kernfs_new_node+0x96/0x150 /fs/kernfs/dir.c:530
+ [<ffffffff812f3797>] kernfs_new_node+0x57/0x90 /fs/kernfs/dir.c:558
+ [<ffffffff812f5f92>] __kernfs_create_file+0x62/0x140 /fs/kernfs/file.c:920
+ [<ffffffff812f6e21>] sysfs_add_file_mode_ns+0x101/0x230 /fs/sysfs/file.c:256
+ [<     inlined    >] internal_create_group+0x16d/0x3f0 create_files /fs/sysfs/group.c:58
+ [<ffffffff812f804d>] internal_create_group+0x16d/0x3f0 /fs/sysfs/group.c:116
+ [<     inlined    >] sysfs_create_groups+0x64/0xc0 sysfs_create_group /fs/sysfs/group.c:138
+ [<ffffffff812f8484>] sysfs_create_groups+0x64/0xc0 /fs/sysfs/group.c:165
+ [<     inlined    >] device_add+0x6ca/0x9b0 device_add_groups /drivers/base/core.c:459
+ [<     inlined    >] device_add+0x6ca/0x9b0 device_add_attrs /drivers/base/core.c:486
+ [<ffffffff8176f2fa>] device_add+0x6ca/0x9b0 /drivers/base/core.c:1037
+ [<     inlined    >] serio_handle_event+0x258/0x3e0 serio_add_port /drivers/input/serio/serio.c:560
+ [<ffffffff8190dca8>] serio_handle_event+0x258/0x3e0 /drivers/input/serio/serio.c:228
+ [<ffffffff810aaf3e>] process_one_work+0x2ee/0x730 /kernel/workqueue.c:2027
+ [<ffffffff810abe9b>] worker_thread+0xcb/0x740 /kernel/workqueue.c:2160
+ [<ffffffff810b5a2b>] kthread+0x14b/0x170 /kernel/kthread.c:207
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = 0
+
+DBG: addr: ffff8801e598866c
+DBG: first offset: 0, second offset: 0
+DBG: T1 clock: {T1: 76531585, T458: 19098}
+DBG: T458 clock: {T458: 39060}
 ==================================================================
 }}}
