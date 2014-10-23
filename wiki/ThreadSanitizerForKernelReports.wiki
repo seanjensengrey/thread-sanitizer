@@ -42,171 +42,39 @@ DBG: first clock: 1312899, second clock: 2336
 
 {{{
 ==================================================================
-ThreadSanitizer: data-race in kmem_cache_alloc
+ThreadSanitizer: data-race in drain_array
 
-Read of size 4 by thread T2 (K2):
- [<     inlined    >] kmem_cache_alloc+0x1dc/0x8d0 ____cache_alloc /mm/slab.c:3081
- [<     inlined    >] kmem_cache_alloc+0x1dc/0x8d0 __do_cache_alloc /mm/slab.c:3355
- [<     inlined    >] kmem_cache_alloc+0x1dc/0x8d0 slab_alloc /mm/slab.c:3394
- [<ffffffff81222c7c>] kmem_cache_alloc+0x1dc/0x8d0 /mm/slab.c:3556
- [<     inlined    >] copy_process.part.43+0x225d/0x2d70 copy_sighand /kernel/fork.c:992
- [<ffffffff8107cdad>] copy_process.part.43+0x225d/0x2d70 /kernel/fork.c:1343
- [<     inlined    >] do_fork+0x100/0x4d0 copy_process /kernel/fork.c:1163
- [<ffffffff8107dae0>] do_fork+0x100/0x4d0 /kernel/fork.c:1607
- [<ffffffff8107dee5>] kernel_thread+0x35/0x50 /kernel/fork.c:1656
- [<     inlined    >] kthreadd+0x2b2/0x330 create_kthread /kernel/kthread.c:231
- [<ffffffff810b6392>] kthreadd+0x2b2/0x330 /kernel/kthread.c:510
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = ffff88041fd15df0
-
-Previous write of size 4 by thread T6 (K6):
- [<     inlined    >] kmem_cache_alloc+0x222/0x8d0 ac_get_obj /mm/slab.c:910
- [<     inlined    >] kmem_cache_alloc+0x222/0x8d0 ____cache_alloc /mm/slab.c:3083
- [<     inlined    >] kmem_cache_alloc+0x222/0x8d0 __do_cache_alloc /mm/slab.c:3355
- [<     inlined    >] kmem_cache_alloc+0x222/0x8d0 slab_alloc /mm/slab.c:3394
- [<ffffffff81222cc2>] kmem_cache_alloc+0x222/0x8d0 /mm/slab.c:3556
- [<     inlined    >] copy_process.part.43+0x225d/0x2d70 copy_sighand /kernel/fork.c:992
- [<ffffffff8107cdad>] copy_process.part.43+0x225d/0x2d70 /kernel/fork.c:1343
- [<     inlined    >] do_fork+0x100/0x4d0 copy_process /kernel/fork.c:1163
- [<ffffffff8107dae0>] do_fork+0x100/0x4d0 /kernel/fork.c:1607
- [<ffffffff8107dee5>] kernel_thread+0x35/0x50 /kernel/fork.c:1656
- [<ffffffff810a4420>] __call_usermodehelper+0x40/0xe0 /kernel/kmod.c:333
- [<ffffffff810aa869>] process_one_work+0x2e9/0x730 /kernel/workqueue.c:2027
- [<ffffffff810ab77b>] worker_thread+0xcb/0x730 /kernel/workqueue.c:2160
- [<ffffffff810b52db>] kthread+0x14b/0x170 /kernel/kthread.c:207
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = 0
-
-DBG: addr: ffff8801e5275f00
-DBG: first offset: 0, second offset: 0
-DBG: T2 clock: {T2: 21260, T6: 6102}
-DBG: T6 clock: {T6: 6111}
-==================================================================
-}}}
-
-{{{
-==================================================================
-ThreadSanitizer: data-race in kmem_cache_alloc
-
-Read of size 4 by thread T2 (K2):
- [<     inlined    >] kmem_cache_alloc+0x2f8/0x8d0 cache_alloc_refill /mm/slab.c:2918
- [<     inlined    >] kmem_cache_alloc+0x2f8/0x8d0 ____cache_alloc /mm/slab.c:3097
- [<     inlined    >] kmem_cache_alloc+0x2f8/0x8d0 __do_cache_alloc /mm/slab.c:3355
- [<     inlined    >] kmem_cache_alloc+0x2f8/0x8d0 slab_alloc /mm/slab.c:3394
- [<ffffffff81222d98>] kmem_cache_alloc+0x2f8/0x8d0 /mm/slab.c:3556
- [<     inlined    >] copy_process.part.43+0x225d/0x2d70 copy_sighand /kernel/fork.c:992
- [<ffffffff8107cdad>] copy_process.part.43+0x225d/0x2d70 /kernel/fork.c:1343
- [<     inlined    >] do_fork+0x100/0x4d0 copy_process /kernel/fork.c:1163
- [<ffffffff8107dae0>] do_fork+0x100/0x4d0 /kernel/fork.c:1607
- [<ffffffff8107dee5>] kernel_thread+0x35/0x50 /kernel/fork.c:1656
- [<     inlined    >] kthreadd+0x2b2/0x330 create_kthread /kernel/kthread.c:231
- [<ffffffff810b6392>] kthreadd+0x2b2/0x330 /kernel/kthread.c:510
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = ffff88041fd15df0
-
-Previous write of size 4 by thread T6 (K6):
- [<     inlined    >] kmem_cache_alloc+0x1f1/0x8d0 ____cache_alloc /mm/slab.c:3082
- [<     inlined    >] kmem_cache_alloc+0x1f1/0x8d0 __do_cache_alloc /mm/slab.c:3355
- [<     inlined    >] kmem_cache_alloc+0x1f1/0x8d0 slab_alloc /mm/slab.c:3394
- [<ffffffff81222c91>] kmem_cache_alloc+0x1f1/0x8d0 /mm/slab.c:3556
- [<     inlined    >] copy_process.part.43+0x225d/0x2d70 copy_sighand /kernel/fork.c:992
- [<ffffffff8107cdad>] copy_process.part.43+0x225d/0x2d70 /kernel/fork.c:1343
- [<     inlined    >] do_fork+0x100/0x4d0 copy_process /kernel/fork.c:1163
- [<ffffffff8107dae0>] do_fork+0x100/0x4d0 /kernel/fork.c:1607
- [<ffffffff8107dee5>] kernel_thread+0x35/0x50 /kernel/fork.c:1656
- [<ffffffff810a4420>] __call_usermodehelper+0x40/0xe0 /kernel/kmod.c:333
- [<ffffffff810aa869>] process_one_work+0x2e9/0x730 /kernel/workqueue.c:2027
- [<ffffffff810ab77b>] worker_thread+0xcb/0x730 /kernel/workqueue.c:2160
- [<ffffffff810b52db>] kthread+0x14b/0x170 /kernel/kthread.c:207
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = 0
-
-DBG: addr: ffff8801e5275f0c
-DBG: first offset: 4, second offset: 4
-DBG: T2 clock: {T2: 21263, T6: 6102}
-DBG: T6 clock: {T6: 6109}
-==================================================================
-}}}
-
-{{{
-==================================================================
-ThreadSanitizer: data-race in ida_pre_get
-
-Write of size 8 by thread T15 (K12):
- [<     inlined    >] ida_pre_get+0x73/0x170 __move_to_free_list /lib/idr.c:156
- [<     inlined    >] ida_pre_get+0x73/0x170 move_to_free_list /lib/idr.c:169
- [<     inlined    >] ida_pre_get+0x73/0x170 __idr_pre_get /lib/idr.c:200
- [<ffffffff814ec343>] ida_pre_get+0x73/0x170 /lib/idr.c:897
- [<ffffffff814ed034>] ida_simple_get+0x54/0x110 /lib/idr.c:1094
- [<ffffffff810a982a>] create_worker+0x3a/0x2a0 /kernel/workqueue.c:1679
- [<     inlined    >] worker_thread+0x52a/0x730 maybe_create_worker /kernel/workqueue.c:1866
- [<     inlined    >] worker_thread+0x52a/0x730 manage_workers /kernel/workqueue.c:1928
- [<ffffffff810abbda>] worker_thread+0x52a/0x730 /kernel/workqueue.c:2134
- [<ffffffff810b52db>] kthread+0x14b/0x170 /kernel/kthread.c:207
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = ffff88041fc95df0
-
-Previous write of size 8 by thread T1 (K1):
- [<     inlined    >] ida_pre_get+0x73/0x170 __move_to_free_list /lib/idr.c:156
- [<     inlined    >] ida_pre_get+0x73/0x170 move_to_free_list /lib/idr.c:169
- [<     inlined    >] ida_pre_get+0x73/0x170 __idr_pre_get /lib/idr.c:200
- [<ffffffff814ec343>] ida_pre_get+0x73/0x170 /lib/idr.c:897
- [<ffffffff814ed034>] ida_simple_get+0x54/0x110 /lib/idr.c:1094
- [<ffffffff812ef726>] __kernfs_new_node+0x96/0x150 /fs/kernfs/dir.c:530
- [<ffffffff812f1047>] kernfs_new_node+0x57/0x90 /fs/kernfs/dir.c:558
- [<ffffffff812f3c39>] kernfs_create_link+0x39/0xc0 /fs/kernfs/symlink.c:32
- [<ffffffff812f50b3>] sysfs_do_create_link_sd.isra.2+0x83/0xe0 /fs/sysfs/symlink.c:44
- [<     inlined    >] sysfs_create_link+0x45/0x80 sysfs_do_create_link /fs/sysfs/symlink.c:80
- [<ffffffff812f5155>] sysfs_create_link+0x45/0x80 /fs/sysfs/symlink.c:92
- [<ffffffff8178536a>] register_cpu_under_node+0x8a/0xd0 /drivers/base/node.c:340
- [<ffffffff817739e3>] register_cpu+0x203/0x220 /drivers/base/cpu.c:355
- [<ffffffff8100f9fc>] arch_register_cpu+0x9c/0x210 /arch/x86/kernel/topology.c:142
- [<ffffffff8230179a>] topology_init+0x9c/0xaa /arch/x86/kernel/topology.c:169
- [<ffffffff8100032d>] do_one_initcall+0xbd/0x220 /init/main.c:794
- [<     inlined    >] kernel_init_freeable+0x2ae/0x375 do_initcall_level /init/main.c:860
- [<     inlined    >] kernel_init_freeable+0x2ae/0x375 do_initcalls /init/main.c:868
- [<     inlined    >] kernel_init_freeable+0x2ae/0x375 do_basic_setup /init/main.c:887
- [<ffffffff822fd7fe>] kernel_init_freeable+0x2ae/0x375 /init/main.c:1008
- [<ffffffff810004a6>] kernel_init+0x16/0x150 /init/main.c:938
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = 0
-
-DBG: addr: ffff8801e4ca5330
-DBG: first offset: 0, second offset: 0
-DBG: T15 clock: {T15: 234, T1: 1300044}
-DBG: T1 clock: {T1: 1300240}
-==================================================================
-}}}
-
-{{{
-==================================================================
-ThreadSanitizer: data-race in __call_rcu.constprop.60
-
-Write of size 8 by thread T30 (K27):
- [<ffffffff810fec4d>] __call_rcu.constprop.60+0x10d/0x3d0 /kernel/rcu/tree.c:2699
- [<ffffffff810fefba>] call_rcu_sched+0x2a/0x40 /kernel/rcu/tree.c:2718
- [<ffffffff810bdf5a>] __put_cred+0x7a/0xa0 /kernel/cred.c:141
- [<     inlined    >] commit_creds+0x350/0x500 put_cred /include/linux/cred.h:249
- [<ffffffff810be530>] commit_creds+0x350/0x500 /kernel/cred.c:479
- [<ffffffff810a42b6>] ____call_usermodehelper+0x1f6/0x290 /kernel/kmod.c:240
- [<ffffffff810a4387>] call_helper+0x37/0x50 /kernel/kmod.c:258
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+Read of size 4 by thread T298 (K295):
+ [<ffffffff81221f56>] drain_array+0x36/0x160 /mm/slab.c:4008 (discriminator 1)
+ [<ffffffff81222bd9>] cache_reap+0x139/0x350 /mm/slab.c:4073
+ [<ffffffff810aaf3e>] process_one_work+0x2ee/0x730 /kernel/workqueue.c:2027
+ [<ffffffff810abe9b>] worker_thread+0xcb/0x740 /kernel/workqueue.c:2160
+ [<ffffffff810b5a2b>] kthread+0x14b/0x170 /kernel/kthread.c:207
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
 DBG: cpu = ffff88041fd95df0
 
-Previous write of size 8 by thread T29 (K26):
- [<ffffffff810feb87>] __call_rcu.constprop.60+0x47/0x3d0 /kernel/rcu/tree.c:2670
- [<ffffffff810fefba>] call_rcu_sched+0x2a/0x40 /kernel/rcu/tree.c:2718
- [<ffffffff81080f65>] release_task+0x7e5/0xaa0 /kernel/exit.c:208
- [<     inlined    >] do_exit+0x113e/0x13a0 exit_notify /kernel/exit.c:634
- [<ffffffff8108235e>] do_exit+0x113e/0x13a0 /kernel/exit.c:775
- [<ffffffff810a4331>] ____call_usermodehelper+0x271/0x290 /kernel/kmod.c:251
- [<ffffffff810a4387>] call_helper+0x37/0x50 /kernel/kmod.c:258
- [<ffffffff81dc41fc>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
-DBG: cpu = 0
+Previous write of size 4 by thread T6 (K6):
+ [<ffffffff812209d5>] transfer_objects+0x85/0xd0 /mm/slab.c:956
+ [<     inlined    >] kmem_cache_alloc_node+0x43a/0x9f0 cache_alloc_refill /mm/slab.c:2933
+ [<     inlined    >] kmem_cache_alloc_node+0x43a/0x9f0 ____cache_alloc /mm/slab.c:3098
+ [<     inlined    >] kmem_cache_alloc_node+0x43a/0x9f0 slab_alloc_node /mm/slab.c:3324
+ [<ffffffff8122390a>] kmem_cache_alloc_node+0x43a/0x9f0 /mm/slab.c:3595
+ [<     inlined    >] copy_process.part.43+0x14c/0x2d70 alloc_task_struct_node /kernel/fork.c:130
+ [<     inlined    >] copy_process.part.43+0x14c/0x2d70 dup_task_struct /kernel/fork.c:305
+ [<ffffffff8107aedc>] copy_process.part.43+0x14c/0x2d70 /kernel/fork.c:1193
+ [<     inlined    >] do_fork+0x100/0x4d0 copy_process /kernel/fork.c:1163
+ [<ffffffff8107dd20>] do_fork+0x100/0x4d0 /kernel/fork.c:1607
+ [<ffffffff8107e125>] kernel_thread+0x35/0x50 /kernel/fork.c:1656
+ [<ffffffff810a4a00>] __call_usermodehelper+0x40/0xe0 /kernel/kmod.c:333
+ [<ffffffff810aaf3e>] process_one_work+0x2ee/0x730 /kernel/workqueue.c:2027
+ [<ffffffff810abe9b>] worker_thread+0xcb/0x740 /kernel/workqueue.c:2160
+ [<ffffffff810b5a2b>] kthread+0x14b/0x170 /kernel/kthread.c:207
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = ffff88041fc15df0
 
-DBG: addr: ffff8801e53aaa78
+DBG: addr: ffff8801e5907400
 DBG: first offset: 0, second offset: 0
-DBG: T30 clock: {T30: 394, T29: 2521}
-DBG: T29 clock: {T29: 2527}
+DBG: T298 clock: {T298: 2999, T6: 3760856}
+DBG: T6 clock: {T6: 3821168}
 ==================================================================
 }}}
