@@ -78,3 +78,57 @@ DBG: T298 clock: {T298: 2999, T6: 3760856}
 DBG: T6 clock: {T6: 3821168}
 ==================================================================
 }}}
+
+{{{
+==================================================================
+ThreadSanitizer: data-race in rb_insert_color
+
+Read of size 8 by thread T6 (K6):
+ [<     inlined    >] rb_insert_color+0x3d/0x3a0 __rb_insert /lib/rbtree.c:89
+ [<ffffffff814f6f5d>] rb_insert_color+0x3d/0x3a0 /lib/rbtree.c:388
+ [<ffffffff810cd800>] __enqueue_entity+0x70/0x80 /kernel/sched/fair.c:523
+ [<     inlined    >] enqueue_task_fair+0x48c/0x1250 enqueue_entity /kernel/sched/fair.c:2804
+ [<ffffffff810d060c>] enqueue_task_fair+0x48c/0x1250 /kernel/sched/fair.c:3948
+ [<ffffffff810c32d5>] enqueue_task+0x35/0x60 /kernel/sched/core.c:845
+ [<ffffffff810c67be>] activate_task+0x1e/0x20 /kernel/sched/core.c:860
+ [<ffffffff810c9be1>] wake_up_new_task+0xd1/0x1b0 /kernel/sched/core.c:2098
+ [<ffffffff8107dea6>] do_fork+0x286/0x4d0 /kernel/fork.c:1633
+ [<ffffffff8107e125>] kernel_thread+0x35/0x50 /kernel/fork.c:1656
+ [<ffffffff810a4a00>] __call_usermodehelper+0x40/0xe0 /kernel/kmod.c:333
+ [<ffffffff810aaf3e>] process_one_work+0x2ee/0x730 /kernel/workqueue.c:2027
+ [<ffffffff810abe9b>] worker_thread+0xcb/0x740 /kernel/workqueue.c:2160
+ [<ffffffff810b5a2b>] kthread+0x14b/0x170 /kernel/kthread.c:207
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = ffff88041fd15df0
+
+Previous write of size 8 by thread T1 (K1):
+ [<     inlined    >] rb_insert_color+0x2fe/0x3a0 rb_set_parent_color /include/linux/rbtree_augmented.
+h:107
+ [<     inlined    >] rb_insert_color+0x2fe/0x3a0 __rb_insert /lib/rbtree.c:87
+ [<ffffffff814f721e>] rb_insert_color+0x2fe/0x3a0 /lib/rbtree.c:388
+ [<ffffffff810cd800>] __enqueue_entity+0x70/0x80 /kernel/sched/fair.c:523
+ [<ffffffff810a77c1>] insert_work+0xd1/0x130 /kernel/workqueue.c:1263
+ [<ffffffff810a7a4d>] __queue_work+0x22d/0x570 /kernel/workqueue.c:1378
+ [<ffffffff810a8060>] queue_work_on+0x50/0x80 /kernel/workqueue.c:1403
+ [<     inlined    >] call_usermodehelper_exec+0x1d4/0x1f0 queue_work /include/linux/workqueue.h:474
+ [<ffffffff810a4d04>] call_usermodehelper_exec+0x1d4/0x1f0 /kernel/kmod.c:594
+ [<ffffffff814f364e>] kobject_uevent_env+0x65e/0x6c0 /lib/kobject_uevent.c:351
+ [<ffffffff814f36d3>] kobject_uevent+0x23/0x40 /lib/kobject_uevent.c:375
+ [<     inlined    >] param_sysfs_init+0x1cc/0x1f5 kernel_add_sysfs_param /kernel/params.c:784
+ [<     inlined    >] param_sysfs_init+0x1cc/0x1f5 param_sysfs_builtin /kernel/params.c:819
+ [<ffffffff8231216a>] param_sysfs_init+0x1cc/0x1f5 /kernel/params.c:939
+ [<ffffffff8100032d>] do_one_initcall+0xbd/0x220 /init/main.c:794
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_initcall_level /init/main.c:860
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_initcalls /init/main.c:868
+ [<     inlined    >] kernel_init_freeable+0x2bb/0x382 do_basic_setup /init/main.c:887
+ [<ffffffff822fd81a>] kernel_init_freeable+0x2bb/0x382 /init/main.c:1008
+ [<ffffffff810004a6>] kernel_init+0x16/0x150 /init/main.c:938
+ [<ffffffff81dcb53c>] ret_from_fork+0x7c/0xb0 /arch/x86/kernel/entry_64.S:347
+DBG: cpu = 0
+
+DBG: addr: ffff8801e34bf468
+DBG: first offset: 0, second offset: 0
+DBG: T6 clock: {T6: 1322733, T1: 9261340}
+DBG: T1 clock: {T1: 9266129}
+==================================================================
+}}}
