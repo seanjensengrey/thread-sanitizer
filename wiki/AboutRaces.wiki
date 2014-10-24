@@ -146,6 +146,10 @@ But remember that a compiler may rearrange `have_pi = true;` and `pi = ComputePi
 DON'T use `volatile` for synchronization in C/C++. 
 The C and C++ standards don't say anything about `volatile` and threads -- so don't assume anything. 
 
+Also, the C++11, chapter intro.multithread, paragraph 21 says: 
+"The execution of a program contains a data race if it contains two conflicting actions in different threads, at least one of which is not atomic, and neither happens before the other. Any such data race results in undefined behavior."
+
+
 You don't believe us? Ok, here is a simplest proof that C++ compilers don't treat volatile as synchronization. 
 {{{
 % cat volatile.cc 
