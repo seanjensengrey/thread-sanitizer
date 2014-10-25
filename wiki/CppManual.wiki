@@ -41,7 +41,7 @@ TSan is supported on Linux x86_64, tested on Ubuntu 12.04.
 
 =Usage=
 
-Simply compile your program with -fsanitize=thread -fPIE and link it with -fsanitize=thread -pie. To get a reasonable performance add -O1 or higher. Use -g to get file names and line numbers in the warning messages.
+Simply compile your program with -fsanitize=thread and link it with -fsanitize=thread. To get a reasonable performance add -O2. Use -g to get file names and line numbers in the warning messages.
 
 When you run the program, TSan will print a report if it finds a data race. Here is an example:
 
