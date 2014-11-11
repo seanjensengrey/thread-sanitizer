@@ -321,3 +321,49 @@ DBG: T271 clock: {T271: 14713, T1: 62714630}
 DBG: T1 clock: {T1: 62714663}
 ==================================================================
 }}}
+
+{{{
+==================================================================
+ThreadSanitizer: data-race in skb_queue_tail
+
+Write of size 8 by thread T289 (K822):
+ [<     inlined    >] skb_queue_tail+0x63/0xc0 __skb_insert /include/linux/skbuff.h:1245
+ [<     inlined    >] skb_queue_tail+0x63/0xc0 __skb_queue_before /include/linux/skbuff.h:1351
+ [<     inlined    >] skb_queue_tail+0x63/0xc0 __skb_queue_tail /include/linux/skbuff.h:1385
+ [<ffffffff81a78963>] skb_queue_tail+0x63/0xc0 /net/core/skbuff.c:2320
+ [<ffffffff81adf7ef>] __netlink_sendskb+0x4f/0x90 /net/netlink/af_netlink.c:1748
+ [<     inlined    >] netlink_broadcast_filtered+0x2d7/0x540 netlink_broadcast_deliver /net/netlink/af_netlink.c:1943
+ [<     inlined    >] netlink_broadcast_filtered+0x2d7/0x540 do_one_broadcast /net/netlink/af_netlink.c:2010
+ [<ffffffff81ae18d7>] netlink_broadcast_filtered+0x2d7/0x540 /net/netlink/af_netlink.c:2055
+ [<ffffffff814f8926>] kobject_uevent_env+0x4a6/0x6c0 /lib/kobject_uevent.c:317
+ [<ffffffff814f8b63>] kobject_uevent+0x23/0x40 /lib/kobject_uevent.c:375
+ [<ffffffff81773616>] uevent_store+0x76/0x80 /drivers/base/core.c:419
+ [<ffffffff81771986>] dev_attr_store+0x46/0x70 /drivers/base/core.c:136
+ [<ffffffff812fb501>] sysfs_kf_write+0xa1/0xd0 /fs/sysfs/file.c:115
+ [<ffffffff812fa155>] kernfs_fop_write+0x165/0x210 /fs/kernfs/file.c:304
+ [<ffffffff8123c783>] vfs_write+0x113/0x310 /fs/read_write.c:532
+ [<     inlined    >] SyS_write+0x6b/0xe0 SYSC_write /fs/read_write.c:583
+ [<ffffffff8123d9fb>] SyS_write+0x6b/0xe0 /fs/read_write.c:575
+ [<ffffffff81dd2929>] system_call_fastpath+0x16/0x1b /arch/x86/kernel/entry_64.S:422
+DBG: cpu = ffff88041fc16030
+
+Previous read of size 8 by thread T288 (K821):
+ [<     inlined    >] datagram_poll+0x105/0x1d0 skb_queue_empty /include/linux/skbuff.h:906
+ [<ffffffff81a85635>] datagram_poll+0x105/0x1d0 /net/core/datagram.c:864
+ [<ffffffff81a6ce4b>] sock_poll+0x9b/0x220 /net/socket.c:1162
+ [<     inlined    >] ep_send_events_proc+0x194/0x340 ep_item_poll /fs/eventpoll.c:800
+ [<ffffffff812a7e34>] ep_send_events_proc+0x194/0x340 /fs/eventpoll.c:1509
+ [<ffffffff812a8c9a>] ep_scan_ready_list+0x12a/0x360 /fs/eventpoll.c:626
+ [<     inlined    >] ep_poll+0x19e/0x5e0 ep_send_events /fs/eventpoll.c:1557
+ [<ffffffff812a90ce>] ep_poll+0x19e/0x5e0 /fs/eventpoll.c:1660
+ [<     inlined    >] SyS_epoll_wait+0x102/0x130 SYSC_epoll_wait /fs/eventpoll.c:1998
+ [<ffffffff812ab182>] SyS_epoll_wait+0x102/0x130 /fs/eventpoll.c:1963
+ [<ffffffff81dd2929>] system_call_fastpath+0x16/0x1b /arch/x86/kernel/entry_64.S:422
+DBG: cpu = 0
+
+DBG: addr: ffff8800dbbf0490
+DBG: first offset: 0, second offset: 0
+DBG: T289 clock: {T289: 1966177, T288: 238009}
+DBG: T288 clock: {T288: 238635}
+==================================================================
+}}}
