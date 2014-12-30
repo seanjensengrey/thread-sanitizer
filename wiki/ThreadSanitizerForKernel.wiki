@@ -24,11 +24,13 @@ Some implementation ideas:
 
 = Building =
 
-Since ktsan uses compiler instrumentation, a custom GCC is required:
+Since ktsan uses compiler instrumentation, a custom GCC is required.
+You can get the gcc path [https://github.com/xairy/kernel-sanitizers/blob/master/ktsan.gcc.patch here].
+
 {{{
 svn checkout svn://gcc.gnu.org/svn/gcc/trunk $GCC_KTSAN
 cd $GCC_KTSAN
-svn up -r 214674
+svn up -r 218317
 patch -p0 -i gcc_ktsan.patch 
 mkdir build
 mkdir install
