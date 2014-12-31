@@ -7,7 +7,14 @@ Currently in development.
 
 Repository: https://github.com/google/ktsan
 
+More extensive documentation is available [https://github.com/google/ktsan/blob/tsan-doc/Documentation/ktsan.txt here].
+
 Some reports produced by the tool are available [ThreadSanitizerForKernelReports here].
+There might be false positive reports.
+
+To symbolize the reports you may use our [https://code.google.com/p/address-sanitizer/source/browse/trunk/tools/kasan_symbolize.py symbolizer script].
+The example of usage can be found on [https://code.google.com/p/address-sanitizer/wiki/AddressSanitizerForKernel kasan homepage].
+
 
 = Details =
 
