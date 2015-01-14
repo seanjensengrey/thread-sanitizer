@@ -79,22 +79,23 @@ vagrant reload
 
 = TODO =
 
- * Handle more synchronization primitives
- # spinlock (done)
- # rwlock (done)
- # sema (via spinlocks)
- # rwsem (done)
- # completion (via spinlocks)
- # mutex (done)
- # ww_mutex?
- # atomics (done)
- # atomics + memory barriers
- # atomic bitops (done)
- # thread start/join (via spinlocks and completions)
- # rcu, rcu_bh, rcu_sched (done)
- # srcu
- # bit_lock (via bitops)
- * Intercept memcpy and friends
- * Support Non SMP build with ktsan
- * Fix false negatives in tests
- * Handle events from interrupts (started in tsan-dev branch)
+ # Handle more synchronization primitives
+ * spinlock (done)
+ * rwlock (done)
+ * sema (via spinlocks)
+ * rwsem (done)
+ * completion (via spinlocks)
+ * mutex (done)
+ * ww_mutex?
+ * atomics (done)
+ * atomics + memory barriers
+ * atomic bitops (done)
+ * thread start/join (via spinlocks and completions)
+ * rcu, rcu_bh, rcu_sched (done)
+ * srcu
+ * bit_lock (via bitops)
+ # Intercept memcpy and friends
+ # Support Non SMP build with ktsan
+ # Fix false negatives in tests
+ # Handle events from interrupts (started in tsan-dev branch)
+ # Use READ_ONCE/ASSIGN_ONCE to fix races instead of atomics (https://lkml.org/lkml/2014/12/3/890)
