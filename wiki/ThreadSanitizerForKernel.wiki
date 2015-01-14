@@ -75,3 +75,26 @@ scp -F ./ssh_config linux-* default:/home/vagrant/
 vagrant ssh -c "sudo dpkg -i linux-headers-3.16.0-tsan_3.16.0-tsan-2_amd64.deb && sudo dpkg -i linux-libc-dev_3.16.0-tsan-2_amd64.deb && sudo dpkg -i linux-image-3.16.0-tsan_3.16.0-tsan-2_amd64.deb"
 vagrant reload
 }}}
+
+
+= TODO =
+
+ * Handle more synchronization primitives
+ # spinlock (done)
+ # rwlock (done)
+ # sema (via spinlocks)
+ # rwsem (done)
+ # completion (via spinlocks)
+ # mutex (done)
+ # ww_mutex?
+ # atomics (done)
+ # atomics + memory barriers
+ # atomic bitops (done)
+ # thread start/join (via spinlocks and completions)
+ # rcu, rcu_bh, rcu_sched (done)
+ # srcu
+ # bit_lock (via bitops)
+ * Intercept memcpy and friends
+ * Support Non SMP build with ktsan
+ * Fix false negatives in tests
+ * Handle events from interrupts (started in tsan-dev branch)
